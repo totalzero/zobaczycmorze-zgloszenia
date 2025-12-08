@@ -36,7 +36,7 @@ class Zgloszenie(models.Model):
 	statusy = [
 		("QUALIFIED", "zakfalifikowany"),
 		("NOT_QUALIFIED", "nie zakfalifikowany"),
-		("odrzócony", "odrzócony")
+		("odrzocone", "odrzocone")
 	]
 	wzrok_statusy = [
 		("WIDZI", "widzący"),

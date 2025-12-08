@@ -11,13 +11,18 @@ def send_simple_mail(subject, to_mail, template_base, context):
 	"""
 	try:
 		TXT = render_to_string(template_base + ".txt", context)
-	except Exception:
+	except Exception as e:
+		print(e)
 		TXT = None
+
 	try:
 		HTML = render_to_string(template_base + ".html", context)
-	except Exception:
+	except Exception as e:
+		print(e)
 		HTML = None
 
+	print(f"zmienna TXT: {TXT}")
+	print(f"zmienna HTML: {HTML}")
 	email = EmailMultiAlternatives(
 		subject=subject,
 		body=TXT,

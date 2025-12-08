@@ -1,0 +1,14 @@
+Z przykrością informujemy, że Twoje zgłoszenie udziału w wydarzeniu {{ zgl.rejs.nazwa}} zostało odrzucone.
+Zachęcamy Cię jednak do udziału w naszych pozostałych wydarzeniach lub ponownej próby w przyszłym roku
+<a href="http://www.zobaczycmorze.pl/zgloszenie/">Formularz zgłoszeniowy</a>.
+
+Podsumowanie finasów:
+suma wpłat: {{ zgl.finanse.suma_wplat }}
+pozostało do zapłaty: {{ zgl.finanse.do_zaplaty }}
+
+Jeśli występuje nadpłata, zwrócimy Ci pieniądze jak najszybciej.
+Jeśli zgłosiłeś się na kilka wydarzeń, to zwracamy Twoją uwagę na to, że każde wydarzenie jest traktowana oddzielnie i dla każdego osobno rozliczane są wpłaty i osobno przeprowadzane kwalifikacje.
+
+W przypadku wątpliwości, prosimy o kontakt.
+
+{% include "emails/_footer.txt" %}

@@ -3,3 +3,5 @@ dodaliśmy ciebie do wachty {{ wachta.nazwa }}
 
 Więcej szczegółów w zgłoszeniu:
 {{ link }}
+
+{% include "emails/_footer.txt" %}

@@ -40,10 +40,10 @@ def zgloszenie_post_save(sender, instance, created, **kwargs):
 		if instance.status in ["QUALIFIED", "zakfalifikowany"]:
 			subject = f"Potwierdzamy zakfalifikowanie na rejs  {instance.rejs.nazwa}"
 			send_simple_mail(subject, instance.email, "emails/zgloszenie_potwierdzone", context)
-		elif instance.status in ["odrzócony", "odrzócony"]:
+		elif instance.status in ["odrzocone", "odrzócone"]:
 			subject = f"odrzócone zgłoszenie na rejs  {instance.rejs.nazwa}"
-			send_simple_mail(subject, instance.email, "emails/zgloszenie_odrzocone", context)
-		
+			send_simple_mail(subject, instance.email, "emails/zgloszenie_o", context)
+
 	old_wachta_id = getattr(instance, "_old_wachta_id", None)
 	if old_wachta_id is None and instance.wachta_id is not None:
 		subject = f"dodano do wachty {instance.wachta.nazwa}"
