@@ -236,5 +236,5 @@ class Dane_Dodatkowe(models.Model):
 
 	@property
 	def masked_dokument(self):
-		result = self.poz3[:1] + ("*" * len(self.poz3) - 2) + self.poz3[len(self.poz3) - 1]
+		result = self.poz3[:1] + ("*" * (len(self.poz3) - 2)) + self.poz3[len(self.poz3) - 1]
 		return result
