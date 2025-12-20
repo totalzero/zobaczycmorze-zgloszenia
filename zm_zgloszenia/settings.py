@@ -32,8 +32,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # ==============================================================================
 _env_file = BASE_DIR / ".env"
 _secret_key = os.environ.get("SECRET_KEY")
-
-if not _env_file.exists() and not _secret_key:
+DJANGO_FIELD_ENCRYPTION_KEY = os.environ.get("DJANGO_FIELD_ENCRYPTION_KEY")
+if not _env_file.exists() and not _secret_key and not DJANGO_FIELD_ENCRYPTION_KEY:
     print("=" * 70)
     print("⚠️  UWAGA: Brak pliku .env!")
     print("   Skopiuj .env.example do .env i uzupełnij wartości:")
