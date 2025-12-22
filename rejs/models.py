@@ -62,10 +62,13 @@ class Wachta(models.Model):
 
 
 class Zgloszenie(models.Model):
+	STATUS_ZAKWALIFIKOWANY = "Zakwalifikowany"
+	STATUS_NIEZAKWALIFIKOWANY = "Niezakwalifikowany"
+	STATUS_ODRZUCONE = "Odrzucone"
 	statusy = [
-		("QUALIFIED", "Zakwalifikowany"),
-		("NOT_QUALIFIED", "Niezakwalifikowany"),
-		("ODRZUCONE", "Odrzucone"),
+		(STATUS_NIEZAKWALIFIKOWANY, "Niezakwalifikowany"),
+		(STATUS_ZAKWALIFIKOWANY, "Zakwalifikowany"),
+		(STATUS_ODRZUCONE, "Odrzucone"),
 	]
 	wzrok_statusy = [
 		("WIDZI", "widzący"),
@@ -91,7 +94,7 @@ class Zgloszenie(models.Model):
 		choices=obecnosc_pola,
 		verbose_name="uczestnictwo w zobaczyć morze")
 	rodo = models.BooleanField(verbose_name="zgoda na przetwarzanie danych osobowych", help_text="zgadzam się na przetwarzanie danych osobowych zgodnie z polityką prywatności zobaczyć morze.")
-	status = models.CharField(max_length=20, choices=statusy, default=statusy[1])
+	status = models.CharField(max_length=20, choices=statusy, default=STATUS_NIEZAKWALIFIKOWANY)
 	wzrok = models.CharField(
 		max_length=15,
 		choices=wzrok_statusy,

@@ -40,6 +40,21 @@
             <dt>Status wzroku:</dt>
             <dd>{{ zgloszenie.get_wzrok_display }}</dd>
         </div>
+        <div class="detail-row">
+            <dt>Status zgłoszenia:</dt>
+            <dd>{{ zgloszenie.get_status_display }}</dd>
+        </div>
+        {% if zgloszenie.dane_dodatkowe %}
+        <div class="detail-row">
+            <dt>pesel::</dt>
+            <dd>{{ zgloszenie.dane_dodatkowe.masked_pesel }}</dd>
+        </div>
+        <div class="detail-row">
+            <dt>dokument:</dt>
+            <dd>{{ zgloszenie.dane_dodatkowe.get_poz2_display }} {{ zgloszenie.dane_dodatkowe.masked_dokument }}</dd>
+        </div>
+    
+    {% endif %}
     </dl>
 </section>
 

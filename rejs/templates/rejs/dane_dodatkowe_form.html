@@ -1,0 +1,72 @@
+{% extends "rejs/base.html" %}
+
+{% block title %}Uzupełnij dane zgłoszenia: {{ zgloszenie.imie }} {{ zgloszenie.nazwisko }} {% endblock %}
+
+{% block nav %}
+<a href="{% url 'index' %}">&larr; Powrót do listy rejsów</a>
+{% endblock %}
+
+{% block content %}
+<h1>Dane dodatkowe</h1>
+
+<div class="cruise-card">
+    <p><strong>Rejs:</strong> {{ rejs.nazwa }}</p>
+    <p><strong>Termin:</strong> {{ rejs.od|date:'j E Y' }} &ndash; {{ rejs.do|date:'j E Y' }}</p>
+    <p><strong>Trasa:</strong> {{ rejs.start }} &rarr; {{ rejs.koniec }}</p>
+</div>
+
+{% if form.errors %}
+<div role="alert" aria-labelledby="error-summary-heading" class="error-summary">
+    <h2 id="error-summary-heading">Formularz zawiera błędy</h2>
+    <p>Popraw poniższe pola i spróbuj ponownie:</p>
+    <ul>
+        {% for field in form %}
+            {% for error in field.errors %}
+            <li><a href="#{{ field.id_for_label }}">{{ field.label }}: {{ error }}</a></li>
+            {% endfor %}
+        {% endfor %}
+        {% for error in form.non_field_errors %}
+        <li>{{ error }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+<form method="post" novalidate aria-describedby="form-instructions">
+    {% csrf_token %}
+
+    <p id="form-instructions" class="form-instructions">
+        Pola oznaczone gwiazdką (<span aria-hidden="true">*</span><span class="sr-only">gwiazdką</span>) są wymagane.
+    </p>
+
+    {% for field in form %}
+    <div class="form-group {% if field.errors %}has-error{% endif %}">
+        <label for="{{ field.id_for_label }}">
+            {{ field.label }}
+            {% if field.field.required %}
+            <span aria-hidden="true" class="required-marker">*</span>
+            <span class="sr-only">(pole wymagane)</span>
+            {% endif %}
+        </label>
+
+        {% if field.help_text %}
+        <p id="{{ field.id_for_label }}-hint" class="field-hint">
+            {{ field.help_text }}
+        </p>
+        {% endif %}
+
+        {% if field.errors %}
+        <p id="{{ field.id_for_label }}-error" class="field-error" role="alert">
+            {{ field.errors.0 }}
+        </p>
+        {% endif %}
+
+        {{ field }}
+    </div>
+    {% endfor %}
+
+    <button type="submit" class="button button-primary">
+        Wyślij
+    </button>
+</form>
+{% endblock %}

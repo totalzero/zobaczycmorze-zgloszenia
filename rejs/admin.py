@@ -86,7 +86,7 @@ class WplataInline(admin.TabularInline):
 class ZgloszenieInline(admin.TabularInline):
 	model = Zgloszenie
 	extra = 0
-	readonly_fields = ["imie", "nazwisko", "email", "telefon"]
+	#readonly_fields = ["imie", "nazwisko", "email", "telefon"]
 	show_change_link = True
 
 
@@ -127,4 +127,4 @@ class ZgloszenieAdmin(admin.ModelAdmin):
 
 @admin.register(Dane_Dodatkowe)
 class Dane_DodatkoweAdmin(admin.ModelAdmin):
-	list_display = ()
+	list_display = ('zgloszenie', 'poz1', 'poz2', 'poz3')

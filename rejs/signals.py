@@ -50,12 +50,12 @@ def zgloszenie_post_save(sender, instance, created, **kwargs):
 			"link": link,
 		}
 
-		if instance.status == "QUALIFIED":
+		if instance.status == "Zakwalifikowany":
 			subject = f"Potwierdzamy zakwalifikowanie na rejs {instance.rejs.nazwa}"
 			send_simple_mail(
 				subject, instance.email, "emails/zgloszenie_potwierdzone", context
 			)
-		elif instance.status == "ODRZUCONE":
+		elif instance.status == "Odrzucone":
 			subject = f"Odrzucone zgłoszenie na rejs {instance.rejs.nazwa}"
 			send_simple_mail(subject, instance.email, "emails/zgloszenie_o", context)
 
