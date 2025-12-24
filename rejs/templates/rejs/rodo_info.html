@@ -1,0 +1,130 @@
+{% extends "rejs/base.html" %}
+
+{% block title %}Informacja o przetwarzaniu danych osobowych - Zobaczyć Morze{% endblock %}
+
+{% block nav %}
+<a href="{% url 'index' %}">&larr; Powrót do listy rejsów</a>
+{% endblock %}
+
+{% block content %}
+<h1>Informacja o przetwarzaniu danych osobowych</h1>
+
+<p class="last-updated">Ostatnia aktualizacja: grudzień 2024</p>
+
+<section class="content-section" aria-labelledby="section-admin">
+    <h2 id="section-admin">1. Administrator danych</h2>
+    <p>
+        Administratorem Twoich danych osobowych jest:<br>
+        <strong>Fundacja "Zobaczyć Morze"</strong><br>
+        <!-- TODO: Uzupełnić dane kontaktowe -->
+        ul. Przykładowa 1<br>
+        00-000 Warszawa<br>
+        E-mail: <a href="mailto:rodo@zobaczycmorze.pl">rodo@zobaczycmorze.pl</a>
+    </p>
+</section>
+
+<section class="content-section" aria-labelledby="section-purpose">
+    <h2 id="section-purpose">2. Cel i podstawa prawna przetwarzania</h2>
+    
+    <h3>Dane podstawowe (imię, nazwisko, e-mail, telefon)</h3>
+    <p>
+        Przetwarzamy Twoje dane w celu realizacji umowy uczestnictwa w rejsie 
+        (Art. 6 ust. 1 lit. b RODO - wykonanie umowy).
+    </p>
+    
+    <h3>Dane wrażliwe (PESEL, numer dokumentu)</h3>
+    <p>
+        Dane te są przetwarzane wyłącznie w celu realizacji procedur zaokrętowania 
+        zgodnie z wymogami kapitana statku. Podstawą prawną jest wykonanie umowy 
+        (Art. 6 ust. 1 lit. b RODO).
+    </p>
+    <p>
+        <strong>Ważne:</strong> Podanie danych wrażliwych jest dobrowolne, ale niezbędne 
+        do uczestnictwa w rejsie ze względu na wymogi procedur portowych i kapitanatu.
+    </p>
+</section>
+
+<section class="content-section" aria-labelledby="section-retention">
+    <h2 id="section-retention">3. Okres przechowywania danych</h2>
+    
+    <dl class="details-list">
+        <div class="detail-row">
+            <dt>Dane podstawowe:</dt>
+            <dd>Przechowywane przez okres niezbędny do realizacji rejsu oraz ewentualnych 
+                roszczeń (do 3 lat po zakończeniu rejsu)</dd>
+        </div>
+        <div class="detail-row">
+            <dt>Dane wrażliwe (PESEL, dokumenty):</dt>
+            <dd><strong>Automatycznie usuwane 30 dni po zakończeniu rejsu</strong></dd>
+        </div>
+    </dl>
+</section>
+
+<section class="content-section" aria-labelledby="section-security">
+    <h2 id="section-security">4. Bezpieczeństwo danych</h2>
+    <p>Stosujemy następujące środki ochrony Twoich danych:</p>
+    <ul>
+        <li>Szyfrowanie danych wrażliwych w bazie danych</li>
+        <li>Szyfrowane połączenie HTTPS</li>
+        <li>Ograniczony dostęp do danych tylko dla upoważnionych osób</li>
+        <li>Logowanie dostępu do danych wrażliwych</li>
+        <li>Regularne kopie zapasowe</li>
+    </ul>
+</section>
+
+<section class="content-section" aria-labelledby="section-rights">
+    <h2 id="section-rights">5. Twoje prawa</h2>
+    <p>Przysługują Ci następujące prawa:</p>
+    <ul>
+        <li><strong>Prawo dostępu</strong> - możesz uzyskać informację o przetwarzanych danych</li>
+        <li><strong>Prawo do sprostowania</strong> - możesz poprawić nieprawidłowe dane</li>
+        <li><strong>Prawo do usunięcia</strong> - możesz żądać usunięcia danych ("prawo do bycia zapomnianym")</li>
+        <li><strong>Prawo do ograniczenia przetwarzania</strong> - możesz ograniczyć sposób wykorzystania danych</li>
+        <li><strong>Prawo do przenoszenia danych</strong> - możesz otrzymać swoje dane w formacie elektronicznym</li>
+        <li><strong>Prawo do sprzeciwu</strong> - możesz sprzeciwić się przetwarzaniu danych</li>
+        <li><strong>Prawo do skargi</strong> - możesz złożyć skargę do Prezesa UODO</li>
+    </ul>
+    <p>
+        Aby skorzystać z powyższych praw, skontaktuj się z nami: 
+        <a href="mailto:rodo@zobaczycmorze.pl">rodo@zobaczycmorze.pl</a>
+    </p>
+</section>
+
+<section class="content-section" aria-labelledby="section-recipients">
+    <h2 id="section-recipients">6. Odbiorcy danych</h2>
+    <p>Twoje dane mogą być przekazywane:</p>
+    <ul>
+        <li>Kapitanowi statku - w zakresie niezbędnym do procedur zaokrętowania</li>
+        <li>Dostawcom usług IT - w zakresie hostingu i utrzymania systemu</li>
+        <li>Organom państwowym - na podstawie przepisów prawa</li>
+    </ul>
+    <p>Nie przekazujemy danych poza Europejski Obszar Gospodarczy (EOG).</p>
+</section>
+
+<section class="content-section" aria-labelledby="section-contact">
+    <h2 id="section-contact">7. Kontakt</h2>
+    <p>
+        W sprawach związanych z ochroną danych osobowych możesz skontaktować się z nami:
+    </p>
+    <ul>
+        <li>E-mail: <a href="mailto:rodo@zobaczycmorze.pl">rodo@zobaczycmorze.pl</a></li>
+        <!-- TODO: Uzupełnić dane kontaktowe -->
+        <li>Telefon: +48 XXX XXX XXX</li>
+        <li>Adres: ul. Przykładowa 1, 00-000 Warszawa</li>
+    </ul>
+</section>
+
+<section class="content-section" aria-labelledby="section-uodo">
+    <h2 id="section-uodo">8. Organ nadzorczy</h2>
+    <p>
+        Jeśli uważasz, że przetwarzanie Twoich danych narusza przepisy RODO, 
+        masz prawo złożyć skargę do:
+    </p>
+    <p>
+        <strong>Prezes Urzędu Ochrony Danych Osobowych</strong><br>
+        ul. Stawki 2, 00-193 Warszawa<br>
+        <a href="https://uodo.gov.pl" target="_blank" rel="noopener">https://uodo.gov.pl</a>
+    </p>
+</section>
+
+{% endblock %}
