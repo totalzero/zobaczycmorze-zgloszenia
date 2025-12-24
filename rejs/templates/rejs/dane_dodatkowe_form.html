@@ -40,6 +40,7 @@
     </p>
 
     {% for field in form %}
+    {% if field.name != 'zgoda_dane_wrazliwe' %}
     <div class="form-group {% if field.errors %}has-error{% endif %}">
         <label for="{{ field.id_for_label }}">
             {{ field.label }}
@@ -63,7 +64,34 @@
 
         {{ field }}
     </div>
+    {% endif %}
     {% endfor %}
+
+    <fieldset class="consent-section" aria-describedby="consent-info">
+        <legend>Zgoda na przetwarzanie danych wrażliwych</legend>
+        <p id="consent-info" class="consent-info">
+            Twoje dane osobowe (PESEL, numer dokumentu) są przetwarzane w celu realizacji 
+            procedur zaokrętowania zgodnie z wymogami kapitana. Podstawą prawną jest 
+            wykonanie umowy (Art. 6 ust. 1 lit. b RODO). Dane zostaną automatycznie 
+            usunięte w ciągu 30 dni po zakończeniu rejsu.
+            <a href="{% url 'rodo_info' %}">Więcej informacji o przetwarzaniu danych</a>.
+        </p>
+        
+        <div class="form-group form-group-checkbox {% if form.zgoda_dane_wrazliwe.errors %}has-error{% endif %}">
+            {{ form.zgoda_dane_wrazliwe }}
+            <label for="{{ form.zgoda_dane_wrazliwe.id_for_label }}">
+                {{ form.zgoda_dane_wrazliwe.label }}
+                <span aria-hidden="true" class="required-marker">*</span>
+                <span class="sr-only">(pole wymagane)</span>
+            </label>
+            
+            {% if form.zgoda_dane_wrazliwe.errors %}
+            <p id="{{ form.zgoda_dane_wrazliwe.id_for_label }}-error" class="field-error" role="alert">
+                {{ form.zgoda_dane_wrazliwe.errors.0 }}
+            </p>
+            {% endif %}
+        </div>
+    </fieldset>
 
     <button type="submit" class="button button-primary">
         Wyślij
