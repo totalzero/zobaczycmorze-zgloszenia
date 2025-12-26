@@ -107,3 +107,13 @@
 - [x] Logowanie dostepu do danych wrazliwych (AuditLog)
 - [x] Automatyczne usuwanie danych po 30 dniach (`usun_dane_wrazliwe`)
 - [x] Strona z klauzula informacyjna RODO (`/rodo/`)
+
+## Dodatkowe zadania (główne)
+
+- [] Naprawa testów jednostkowych - wysypuje się większość
+- [] Nie widać zmian związanych z adresem
+- [] Zgoda na przetwarzanie danych osobowych - hmmm... gdzie opcja do dodania PESEL'u?
+- [] Gdzie alternatywny wygląd strony?
+- [] reset hasła dla admina (może jako poe?)
+- [] refactor strony - na zasadzie MVC - nie wiem czy Django to obsługuje/wspiera
+- [] pokazuje się warning przy uruchamianiu strony/serwera - zbadać
