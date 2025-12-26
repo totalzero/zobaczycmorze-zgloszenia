@@ -96,6 +96,15 @@ class Zgloszenie(models.Model):
         verbose_name="data urodzenia",
         default=datetime.date.today(),
     )
+    adres = models.CharField(
+        null=False, blank=False, default="unknown", verbose_name="adres"
+    )
+    kod_pocztowy = models.CharField(
+        null=False, blank=False, default="00-000", verbose_name="kod pocztowy"
+    )
+    miejscowosc = models.CharField(
+        null=False, blank=False, default="unknown", verbose_name="miejscowość"
+    )
     obecnosc = models.CharField(
         max_length=3,
         choices=obecnosc_pola,
@@ -248,6 +257,9 @@ class Dane_Dodatkowe(models.Model):
     class Meta:
         verbose_name = "dane dodatkowe"
         verbose_name_plural = "dane dodatkowe"
+        permissions = [
+            ("export_sensitive_data", "Może eksportować dane wrażliwe do raportów"),
+        ]
 
     def __str__(self) -> str:
         return f"dane dodatkowe dla zgłoszenia: {self.zgloszenie_id}"

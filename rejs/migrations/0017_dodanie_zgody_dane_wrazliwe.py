@@ -5,9 +5,8 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ("rejs", "0014_alter_zgloszenie_status"),
+        ("rejs", "0016_zgloszenie_adres_zgloszenie_kod_pocztowy_and_more"),
     ]
 
     operations = [
