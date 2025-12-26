@@ -117,3 +117,4 @@
 - [] reset hasła dla admina (może jako poe?)
 - [] refactor strony - na zasadzie MVC - nie wiem czy Django to obsługuje/wspiera
 - [] pokazuje się warning przy uruchamianiu strony/serwera - zbadać
+- [] show admin page from cli
