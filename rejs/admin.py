@@ -1,7 +1,9 @@
 from django import forms
 from django.contrib import admin
 from django.contrib.admin import widgets
+from django.http import HttpResponse
 
+from rejs.reports import generate_rejs_report
 from .models import (
     Ogloszenie,
     Rejs,
@@ -12,6 +14,29 @@ from .models import (
     AuditLog,
 )
 from .audit import log_audit
+
+
+@admin.action(description="Generuj raport Excel dla rejsu")
+def generate_report(modeladmin, request, queryset):
+    if queryset.count() != 1:
+        modeladmin.message_user(
+            request,
+            "Wybierz dokładnie jeden rejs.",
+            level="error",
+        )
+        return
+
+    rejs = queryset.first()
+    # Log audit for report generation with sensitive data
+    log_audit(
+        request=request,
+        akcja="eksport",
+        model_name="Rejs",
+        object_id=rejs.id,
+        object_repr=str(rejs),
+        szczegoly="Wygenerowano raport Excel z danymi rejsu",
+    )
+    return generate_rejs_report(rejs, request.user)
 
 
 class OgloszenieInline(admin.StackedInline):
@@ -102,6 +127,7 @@ class ZgloszenieInline(admin.TabularInline):
 @admin.register(Rejs)
 class RejsyAdmin(admin.ModelAdmin):
     list_display = ["nazwa", "od", "do", "start", "koniec"]
+    actions = [generate_report]
     inlines = [ZgloszenieInline, WachtaInline, OgloszenieInline]
 
 

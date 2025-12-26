@@ -1,0 +1,161 @@
+{% extends "rejs/base.html" %}
+
+{% block title %}Szczegóły zgłoszenia - {{ zgloszenie.rejs.nazwa }} - Zobaczyć Morze{% endblock %}
+
+{% block nav %}
+<a href="{% url 'index' %}" class="btn btn-link">&larr; Powrót do listy rejsów</a>
+{% endblock %}
+
+{% block content %}
+<h1 class="mb-4 text-center">Szczegóły Twojego zgłoszenia</h1>
+
+<!-- Baner statusu -->
+<div class="status-banner status-{{ zgloszenie.status|lower }} alert mb-4"
+     role="status"
+     aria-label="Status zgłoszenia">
+
+<i class="bi bi-info-square-fill me-1"></i>
+    <strong>Status:</strong> {{ zgloszenie.get_status_display }}
+</div>
+
+<!-- Sekcja: Dane osobowe -->
+<div class="card mb-4 shadow-sm border-0" aria-labelledby="section-personal">
+    <div class="card-header bg-primary text-white">
+        <h2 class="h5 mb-0">Dane osobowe</h2>
+    </div>
+    <div class="card-body">
+        <dl class="row mb-0">
+    <dt class="col-sm-4">
+        <i class="bi bi-person-fill me-1"></i> Imię:
+    </dt>
+    <dd class="col-sm-8">{{ zgloszenie.imie }}</dd>
+
+    <dt class="col-sm-4">
+        <i class="bi bi-person-badge-fill me-1"></i> Nazwisko:
+    </dt>
+    <dd class="col-sm-8">{{ zgloszenie.nazwisko }}</dd>
+
+    <dt class="col-sm-4">
+        <i class="bi bi-envelope-fill me-1"></i> E-mail:
+    </dt>
+    <dd class="col-sm-8">{{ zgloszenie.email }}</dd>
+
+    <dt class="col-sm-4">
+        <i class="bi bi-telephone-fill me-1"></i> Telefon:
+    </dt>
+    <dd class="col-sm-8">{{ zgloszenie.telefon }}</dd>
+
+    <dt class="col-sm-4">
+        <i class="bi bi-eye-fill me-1"></i> Status wzroku:
+    </dt>
+    <dd class="col-sm-8">{{ zgloszenie.get_wzrok_display }}</dd>
+</dl>
+    </div>
+</div>
+
+<!-- Sekcja: Płatności -->
+<div class="card mb-4 shadow-sm border-0" aria-labelledby="section-payments">
+    <div class="card-header bg-primary text-white">
+        <h2 class="h5 mb-0">Płatności</h2>
+    </div>
+    <div class="card-body">
+        <dl class="row mb-0">
+    <dt class="col-sm-5">
+        <i class="bi bi-wallet-fill me-1"></i> Cena rejsu:
+    </dt>
+    <dd class="col-sm-7 fw-bold">{{ zgloszenie.rejs_cena }} zł</dd>
+
+    <dt class="col-sm-5">
+        <i class="bi bi-cash-stack me-1"></i> Suma wpłat:
+    </dt>
+    <dd class="col-sm-7">{{ zgloszenie.suma_wplat }} zł</dd>
+
+    <dt class="col-sm-5">
+        <i class="bi bi-cash-stack me-1"></i> Pozostało do zapłaty:
+    </dt>
+    <dd class="col-sm-7">
+        <strong>{{ zgloszenie.do_zaplaty }} zł</strong>
+
+        {% if zgloszenie.do_zaplaty == 0 %}
+        <span class="badge bg-success ms-2">Opłacono</span>
+        {% else %}
+        <span class="badge bg-warning text-dark ms-2">Do zapłaty</span>
+        {% endif %}
+        </dd>
+        </dl>
+    </div>
+</div>
+
+<!-- Sekcja: Informacje o rejsie -->
+<div class="card mb-4 shadow-sm border-0" aria-labelledby="section-cruise">
+    <div class="card-header bg-primary text-white">
+        <h2 class="h5 mb-0">Informacje o rejsie</h2>
+    </div>
+    <div class="card-body">
+    <h3 class="h5">{{ zgloszenie.rejs.nazwa }}</h3>
+
+    <p class="mb-1">
+        <i class="bi bi-calendar-event me-1"></i>
+        <strong>Termin:</strong>
+        <time datetime="{{ zgloszenie.rejs.od|date:'Y-m-d' }}">
+            {{ zgloszenie.rejs.od|date:'j E Y' }}
+        </time>
+        →
+        <time datetime="{{ zgloszenie.rejs.do|date:'Y-m-d' }}">
+            {{ zgloszenie.rejs.do|date:'j E Y' }}
+        </time>
+    </p>
+
+    <p>
+        <i class="bi bi-geo-alt me-1"></i>
+        <strong>Trasa:</strong>
+        {{ zgloszenie.rejs.start }} → {{ zgloszenie.rejs.koniec }}
+    </p>
+
+    {% if zgloszenie.rejs.opis %}
+    <div class="alert alert-primary mb-0">
+    <h6 class="mb-2">
+        <i class="bi bi-info-circle me-1"></i> Opis rejsu
+    </h6>
+    <p class="mb-0">
+        {{ zgloszenie.rejs.opis|linebreaks }}
+    </p>
+    </div>
+    {% endif %}
+</div>
+</div>
+
+<!-- Sekcja: Ogłoszenia -->
+<div class="card mb-4 shadow-sm border-0" aria-labelledby="section-announcements">
+    <div class="card-header bg-primary text-white">
+        <h2 class="h5 mb-0">
+            Ogłoszenia rejsowe
+        </h2>
+    </div>
+
+    <div class="card-body">
+
+        {% if zgloszenie.rejs.ogloszenia.all %}
+        <ul class="list-group list-group-flush">
+            {% for o in zgloszenie.rejs.ogloszenia.all %}
+            <li class="list-group-item">
+                <h3 class="h6 mb-1 d-flex align-items-center">
+                    <i class="bi bi-bell-fill text-primary me-2"></i>
+                    {{ o.tytul }}
+                </h3>
+                <div class="text-muted">
+                    {{ o.text|linebreaks }}
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p class="text-muted mb-0">
+            <i class="bi bi-info-circle me-1"></i>
+            Brak ogłoszeń dla tego rejsu.
+        </p>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

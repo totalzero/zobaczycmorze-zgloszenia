@@ -1,0 +1,91 @@
+{% extends "rejs/base.html" %}
+
+{% block title %}Zgłoszenie na rejs {{ rejs.nazwa }} - Zobaczyć Morze{% endblock %}
+
+{% block nav %}
+<a href="{% url 'index' %}" class="btn btn-link">&larr; Powrót do listy rejsów</a>
+{% endblock %}
+
+{% block content %}
+<h1 class="mb-4 text-center">Zgłoszenie na rejs</h1>
+
+<div class="card mb-4 shadow-sm border-0">
+    <div class="card-header bg-primary text-white">
+        <h2 class="h5 mb-0">{{ rejs.nazwa }}</h2>
+    </div>
+    <div class="card-body">
+        <p class="mb-1">
+            <i class="bi bi-calendar-event me-1"></i>
+            <strong>Termin:</strong>
+            {{ rejs.od|date:'j E Y' }} – {{ rejs.do|date:'j E Y' }}
+        </p>
+        <p class="mb-0">
+            <i class="bi bi-geo-alt me-1"></i>
+            <strong>Trasa:</strong>
+            {{ rejs.start }} → {{ rejs.koniec }}
+        </p>
+    </div>
+</div>
+
+
+{% if form.errors %}
+<div class="alert alert-danger" role="alert" aria-labelledby="error-summary-heading">
+    <h2 id="error-summary-heading" class="h5">
+        Formularz zawiera błędy
+    </h2>
+    <p>Popraw poniższe pola i spróbuj ponownie:</p>
+    <ul class="mb-0">
+        {% for field in form %}
+            {% for error in field.errors %}
+            <li>
+                <a href="#{{ field.id_for_label }}" class="alert-link">
+                    {{ field.label }}: {{ error }}
+                </a>
+            </li>            
+            {% endfor %}
+        {% endfor %}
+        {% for error in form.non_field_errors %}
+        <li>{{ error }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+<form method="post" novalidate aria-describedby="form-instructions">
+    {% csrf_token %}
+
+    <p id="form-instructions" class="text-muted mb-4">
+        Pola oznaczone <span class="text-danger">*</span> są wymagane.
+    </p>
+
+    {% for field in form %}
+    <div class="mb-3">
+        <label for="{{ field.id_for_label }}" class="form-label">
+            {{ field.label }}
+            {% if field.field.required %}
+                <span class="text-danger">*</span>
+                <span class="visually-hidden">(pole wymagane)</span>
+            {% endif %}
+        </label>
+
+        {% if field.help_text %}
+        <div class="form-text">
+            {{ field.help_text }}
+        </div>
+        {% endif %}
+
+        {% if field.errors %}
+        <div class="invalid-feedback d-block">
+            {{ field.errors.0 }}
+        </div>
+        {% endif %}
+
+        {{ field }}
+    </div>
+    {% endfor %}
+
+    <button type="submit" class="btn btn-primary btn-lg">
+        Wyślij zgłoszenie
+    </button>
+</form>
+{% endblock %}

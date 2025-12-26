@@ -7,9 +7,8 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ("rejs", "0015_dodanie_zgody_dane_wrazliwe"),
+        ("rejs", "0017_dodanie_zgody_dane_wrazliwe"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
