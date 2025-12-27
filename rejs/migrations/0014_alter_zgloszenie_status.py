@@ -4,23 +4,22 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+	dependencies = [
+		("rejs", "0013_alter_zgloszenie_data_urodzenia_and_more"),
+	]
 
-    dependencies = [
-        ("rejs", "0013_alter_zgloszenie_data_urodzenia_and_more"),
-    ]
-
-    operations = [
-        migrations.AlterField(
-            model_name="zgloszenie",
-            name="status",
-            field=models.CharField(
-                choices=[
-                    ("Niezakwalifikowany", "Niezakwalifikowany"),
-                    ("Zakwalifikowany", "Zakwalifikowany"),
-                    ("Odrzucone", "Odrzucone"),
-                ],
-                default="Niezakwalifikowany",
-                max_length=20,
-            ),
-        ),
-    ]
+	operations = [
+		migrations.AlterField(
+			model_name="zgloszenie",
+			name="status",
+			field=models.CharField(
+				choices=[
+					("Niezakwalifikowany", "Niezakwalifikowany"),
+					("Zakwalifikowany", "Zakwalifikowany"),
+					("Odrzucone", "Odrzucone"),
+				],
+				default="Niezakwalifikowany",
+				max_length=20,
+			),
+		),
+	]

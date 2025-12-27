@@ -5,65 +5,60 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+	dependencies = [
+		("rejs", "0008_alter_finanse_options_zgloszenie_token"),
+	]
 
-    dependencies = [
-        ("rejs", "0008_alter_finanse_options_zgloszenie_token"),
-    ]
-
-    operations = [
-        migrations.AlterField(
-            model_name="zgloszenie",
-            name="status",
-            field=models.CharField(
-                choices=[
-                    ("QUALIFIED", "zakfalifikowany"),
-                    ("NOT_QUALIFIED", "nie zakfalifikowany"),
-                    ("odrzocone", "odrzócone"),
-                ],
-                default=("NOT_QUALIFIED", "nie zakfalifikowany"),
-                max_length=20,
-            ),
-        ),
-        migrations.CreateModel(
-            name="Ogloszenie",
-            fields=[
-                (
-                    "id",
-                    models.BigAutoField(
-                        auto_created=True,
-                        primary_key=True,
-                        serialize=False,
-                        verbose_name="ID",
-                    ),
-                ),
-                ("data", models.DateTimeField(auto_now_add=True)),
-                (
-                    "tytul",
-                    models.CharField(
-                        default="nowe ogłoszenie", max_length=100, verbose_name="tytuł"
-                    ),
-                ),
-                (
-                    "text",
-                    models.TextField(
-                        default="krótka informacja o rejsie", verbose_name="tekst"
-                    ),
-                ),
-                (
-                    "rejs",
-                    models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE,
-                        related_name="ogloszenia",
-                        to="rejs.rejs",
-                    ),
-                ),
-            ],
-            options={
-                "verbose_name": "ogłoszenie",
-                "verbose_name_plural": "ogłoszenia",
-            },
-        ),
-        migrations.DeleteModel(
-            name="Info",
-        ),
-    ]
+	operations = [
+		migrations.AlterField(
+			model_name="zgloszenie",
+			name="status",
+			field=models.CharField(
+				choices=[
+					("QUALIFIED", "zakfalifikowany"),
+					("NOT_QUALIFIED", "nie zakfalifikowany"),
+					("odrzocone", "odrzócone"),
+				],
+				default=("NOT_QUALIFIED", "nie zakfalifikowany"),
+				max_length=20,
+			),
+		),
+		migrations.CreateModel(
+			name="Ogloszenie",
+			fields=[
+				(
+					"id",
+					models.BigAutoField(
+						auto_created=True,
+						primary_key=True,
+						serialize=False,
+						verbose_name="ID",
+					),
+				),
+				("data", models.DateTimeField(auto_now_add=True)),
+				(
+					"tytul",
+					models.CharField(default="nowe ogłoszenie", max_length=100, verbose_name="tytuł"),
+				),
+				(
+					"text",
+					models.TextField(default="krótka informacja o rejsie", verbose_name="tekst"),
+				),
+				(
+					"rejs",
+					models.ForeignKey(
+						on_delete=django.db.models.deletion.CASCADE,
+						related_name="ogloszenia",
+						to="rejs.rejs",
+					),
+				),
+			],
+			options={
+				"verbose_name": "ogłoszenie",
+				"verbose_name_plural": "ogłoszenia",
+			},
+		),
+		migrations.DeleteModel(
+			name="Info",
+		),
+	]

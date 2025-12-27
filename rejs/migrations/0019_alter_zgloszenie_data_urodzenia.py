@@ -5,15 +5,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+	dependencies = [
+		("rejs", "0018_zgloszenie_unique_zgloszenie_na_rejs_dla_osoby"),
+	]
 
-    dependencies = [
-        ('rejs', '0018_zgloszenie_unique_zgloszenie_na_rejs_dla_osoby'),
-    ]
-
-    operations = [
-        migrations.AlterField(
-            model_name='zgloszenie',
-            name='data_urodzenia',
-            field=models.DateField(default=datetime.date(2025, 12, 27), verbose_name='data urodzenia'),
-        ),
-    ]
+	operations = [
+		migrations.AlterField(
+			model_name="zgloszenie",
+			name="data_urodzenia",
+			field=models.DateField(default=datetime.date(2025, 12, 27), verbose_name="data urodzenia"),
+		),
+	]

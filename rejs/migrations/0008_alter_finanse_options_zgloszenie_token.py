@@ -6,19 +6,18 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+	dependencies = [
+		("rejs", "0007_alter_wplata_options_info"),
+	]
 
-    dependencies = [
-        ("rejs", "0007_alter_wplata_options_info"),
-    ]
-
-    operations = [
-        migrations.AlterModelOptions(
-            name="finanse",
-            options={"verbose_name": "finanse", "verbose_name_plural": "finanse"},
-        ),
-        migrations.AddField(
-            model_name="zgloszenie",
-            name="token",
-            field=models.UUIDField(default=uuid.uuid4, editable=False, unique=True),
-        ),
-    ]
+	operations = [
+		migrations.AlterModelOptions(
+			name="finanse",
+			options={"verbose_name": "finanse", "verbose_name_plural": "finanse"},
+		),
+		migrations.AddField(
+			model_name="zgloszenie",
+			name="token",
+			field=models.UUIDField(default=uuid.uuid4, editable=False, unique=True),
+		),
+	]

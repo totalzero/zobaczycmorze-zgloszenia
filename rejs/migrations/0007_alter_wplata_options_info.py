@@ -5,36 +5,33 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+	dependencies = [
+		("rejs", "0006_remove_wachta_czlonkowie_zgloszenie_wachta"),
+	]
 
-    dependencies = [
-        ("rejs", "0006_remove_wachta_czlonkowie_zgloszenie_wachta"),
-    ]
-
-    operations = [
-        migrations.AlterModelOptions(
-            name="wplata",
-            options={"verbose_name": "wpłata", "verbose_name_plural": "wpłaty"},
-        ),
-        migrations.CreateModel(
-            name="Info",
-            fields=[
-                (
-                    "id",
-                    models.BigAutoField(
-                        auto_created=True,
-                        primary_key=True,
-                        serialize=False,
-                        verbose_name="ID",
-                    ),
-                ),
-                ("data", models.DateTimeField(auto_now_add=True)),
-                ("text", models.TextField(default="krótka informacja o rejsie")),
-                (
-                    "rejs",
-                    models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE, to="rejs.rejs"
-                    ),
-                ),
-            ],
-        ),
-    ]
+	operations = [
+		migrations.AlterModelOptions(
+			name="wplata",
+			options={"verbose_name": "wpłata", "verbose_name_plural": "wpłaty"},
+		),
+		migrations.CreateModel(
+			name="Info",
+			fields=[
+				(
+					"id",
+					models.BigAutoField(
+						auto_created=True,
+						primary_key=True,
+						serialize=False,
+						verbose_name="ID",
+					),
+				),
+				("data", models.DateTimeField(auto_now_add=True)),
+				("text", models.TextField(default="krótka informacja o rejsie")),
+				(
+					"rejs",
+					models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="rejs.rejs"),
+				),
+			],
+		),
+	]

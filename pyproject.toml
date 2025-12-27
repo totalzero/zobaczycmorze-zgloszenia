@@ -21,9 +21,15 @@ dev = [
 
 [tool.ruff]
 target-version = "py312"
+indent-width = 4
+line-length = 120
+
+[tool.ruff.format]
+indent-style = "tab"
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP"]
+ignore = ["W191"]  # Ignore "indentation contains tabs" warning since we use tabs
 
 [tool.mypy]
 python_version = "3.12"

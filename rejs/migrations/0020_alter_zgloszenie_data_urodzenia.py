@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+	dependencies = [
+		("rejs", "0019_alter_zgloszenie_data_urodzenia"),
+	]
 
-    dependencies = [
-        ('rejs', '0019_alter_zgloszenie_data_urodzenia'),
-    ]
-
-    operations = [
-        migrations.AlterField(
-            model_name='zgloszenie',
-            name='data_urodzenia',
-            field=models.DateField(verbose_name='data urodzenia'),
-        ),
-    ]
+	operations = [
+		migrations.AlterField(
+			model_name="zgloszenie",
+			name="data_urodzenia",
+			field=models.DateField(verbose_name="data urodzenia"),
+		),
+	]

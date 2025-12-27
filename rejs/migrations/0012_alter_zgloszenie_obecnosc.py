@@ -4,19 +4,18 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+	dependencies = [
+		("rejs", "0011_alter_ogloszenie_options_alter_wachta_options_and_more"),
+	]
 
-    dependencies = [
-        ("rejs", "0011_alter_ogloszenie_options_alter_wachta_options_and_more"),
-    ]
-
-    operations = [
-        migrations.AlterField(
-            model_name="zgloszenie",
-            name="obecnosc",
-            field=models.CharField(
-                choices=[("tak", "tak"), ("nie", "nie")],
-                max_length=3,
-                verbose_name="uczestnictwo w zobaczyć morze",
-            ),
-        ),
-    ]
+	operations = [
+		migrations.AlterField(
+			model_name="zgloszenie",
+			name="obecnosc",
+			field=models.CharField(
+				choices=[("tak", "tak"), ("nie", "nie")],
+				max_length=3,
+				verbose_name="uczestnictwo w zobaczyć morze",
+			),
+		),
+	]

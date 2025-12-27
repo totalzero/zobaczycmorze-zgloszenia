@@ -6,30 +6,27 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+	dependencies = [
+		("rejs", "0014_alter_zgloszenie_status"),
+	]
 
-    dependencies = [
-        ("rejs", "0014_alter_zgloszenie_status"),
-    ]
-
-    operations = [
-        migrations.AlterModelOptions(
-            name="dane_dodatkowe",
-            options={
-                "permissions": [
-                    (
-                        "export_sensitive_data",
-                        "Może eksportować dane wrażliwe do raportów",
-                    )
-                ],
-                "verbose_name": "dane dodatkowe",
-                "verbose_name_plural": "dane dodatkowe",
-            },
-        ),
-        migrations.AlterField(
-            model_name="zgloszenie",
-            name="data_urodzenia",
-            field=models.DateField(
-                default=datetime.date(2025, 12, 25), verbose_name="data urodzenia"
-            ),
-        ),
-    ]
+	operations = [
+		migrations.AlterModelOptions(
+			name="dane_dodatkowe",
+			options={
+				"permissions": [
+					(
+						"export_sensitive_data",
+						"Może eksportować dane wrażliwe do raportów",
+					)
+				],
+				"verbose_name": "dane dodatkowe",
+				"verbose_name_plural": "dane dodatkowe",
+			},
+		),
+		migrations.AlterField(
+			model_name="zgloszenie",
+			name="data_urodzenia",
+			field=models.DateField(default=datetime.date(2025, 12, 25), verbose_name="data urodzenia"),
+		),
+	]

@@ -5,20 +5,19 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+	dependencies = [
+		("rejs", "0016_zgloszenie_adres_zgloszenie_kod_pocztowy_and_more"),
+	]
 
-    dependencies = [
-        ('rejs', '0016_zgloszenie_adres_zgloszenie_kod_pocztowy_and_more'),
-    ]
-
-    operations = [
-        migrations.AddField(
-            model_name='rejs',
-            name='aktywna_rekrutacja',
-            field=models.BooleanField(default=True, verbose_name='aktywna rekrutacja'),
-        ),
-        migrations.AlterField(
-            model_name='zgloszenie',
-            name='data_urodzenia',
-            field=models.DateField(default=datetime.date(2025, 12, 26), verbose_name='data urodzenia'),
-        ),
-    ]
+	operations = [
+		migrations.AddField(
+			model_name="rejs",
+			name="aktywna_rekrutacja",
+			field=models.BooleanField(default=True, verbose_name="aktywna rekrutacja"),
+		),
+		migrations.AlterField(
+			model_name="zgloszenie",
+			name="data_urodzenia",
+			field=models.DateField(default=datetime.date(2025, 12, 26), verbose_name="data urodzenia"),
+		),
+	]

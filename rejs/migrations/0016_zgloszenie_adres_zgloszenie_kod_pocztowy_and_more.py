@@ -4,25 +4,24 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+	dependencies = [
+		("rejs", "0015_alter_dane_dodatkowe_options_and_more"),
+	]
 
-    dependencies = [
-        ("rejs", "0015_alter_dane_dodatkowe_options_and_more"),
-    ]
-
-    operations = [
-        migrations.AddField(
-            model_name="zgloszenie",
-            name="adres",
-            field=models.CharField(default="unknown"),
-        ),
-        migrations.AddField(
-            model_name="zgloszenie",
-            name="kod_pocztowy",
-            field=models.CharField(default="00-000", verbose_name="kod pocztowy"),
-        ),
-        migrations.AddField(
-            model_name="zgloszenie",
-            name="miejscowosc",
-            field=models.CharField(default="unknown"),
-        ),
-    ]
+	operations = [
+		migrations.AddField(
+			model_name="zgloszenie",
+			name="adres",
+			field=models.CharField(default="unknown"),
+		),
+		migrations.AddField(
+			model_name="zgloszenie",
+			name="kod_pocztowy",
+			field=models.CharField(default="00-000", verbose_name="kod pocztowy"),
+		),
+		migrations.AddField(
+			model_name="zgloszenie",
+			name="miejscowosc",
+			field=models.CharField(default="unknown"),
+		),
+	]

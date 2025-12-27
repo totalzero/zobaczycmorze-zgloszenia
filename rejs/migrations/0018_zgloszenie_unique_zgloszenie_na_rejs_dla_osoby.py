@@ -4,14 +4,15 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+	dependencies = [
+		("rejs", "0017_rejs_aktywna_rekrutacja_and_more"),
+	]
 
-    dependencies = [
-        ('rejs', '0017_rejs_aktywna_rekrutacja_and_more'),
-    ]
-
-    operations = [
-        migrations.AddConstraint(
-            model_name='zgloszenie',
-            constraint=models.UniqueConstraint(fields=('rejs', 'imie', 'nazwisko', 'email'), name='unique_zgloszenie_na_rejs_dla_osoby'),
-        ),
-    ]
+	operations = [
+		migrations.AddConstraint(
+			model_name="zgloszenie",
+			constraint=models.UniqueConstraint(
+				fields=("rejs", "imie", "nazwisko", "email"), name="unique_zgloszenie_na_rejs_dla_osoby"
+			),
+		),
+	]

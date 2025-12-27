@@ -4,18 +4,18 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-    dependencies = [
-        ("rejs", "0020_alter_zgloszenie_data_urodzenia"),
-    ]
+	dependencies = [
+		("rejs", "0020_alter_zgloszenie_data_urodzenia"),
+	]
 
-    operations = [
-        migrations.AddField(
-            model_name="dane_dodatkowe",
-            name="zgoda_dane_wrazliwe",
-            field=models.BooleanField(
-                default=False,
-                help_text="Wyrażam zgodę na przetwarzanie moich danych osobowych (PESEL, numer dokumentu) w celu realizacji procedur zaokrętowania zgodnie z wymogami kapitana. Dane zostaną usunięte w ciągu 30 dni po zakończeniu rejsu.",
-                verbose_name="zgoda na przetwarzanie danych wrażliwych",
-            ),
-        ),
-    ]
+	operations = [
+		migrations.AddField(
+			model_name="dane_dodatkowe",
+			name="zgoda_dane_wrazliwe",
+			field=models.BooleanField(
+				default=False,
+				help_text="Wyrażam zgodę na przetwarzanie moich danych osobowych (PESEL, numer dokumentu) w celu realizacji procedur zaokrętowania zgodnie z wymogami kapitana. Dane zostaną usunięte w ciągu 30 dni po zakończeniu rejsu.",
+				verbose_name="zgoda na przetwarzanie danych wrażliwych",
+			),
+		),
+	]

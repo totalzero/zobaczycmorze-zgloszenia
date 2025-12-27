@@ -5,90 +5,89 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+	dependencies = [
+		("rejs", "0002_alter_rejs_options_alter_zgloszenie_options"),
+	]
 
-    dependencies = [
-        ("rejs", "0002_alter_rejs_options_alter_zgloszenie_options"),
-    ]
-
-    operations = [
-        migrations.AddField(
-            model_name="rejs",
-            name="cena",
-            field=models.DecimalField(decimal_places=2, default=1500, max_digits=10),
-        ),
-        migrations.AddField(
-            model_name="rejs",
-            name="zaliczka",
-            field=models.DecimalField(decimal_places=2, default=500, max_digits=10),
-        ),
-        migrations.AddField(
-            model_name="zgloszenie",
-            name="status",
-            field=models.CharField(
-                choices=[
-                    ("QUALIFIED", "zakfalifikowany"),
-                    ("NOT_QUALIFIED", "nie zakfalifikowany"),
-                ],
-                default=("NOT_QUALIFIED", "nie zakfalifikowany"),
-                max_length=20,
-            ),
-        ),
-        migrations.CreateModel(
-            name="Finanse",
-            fields=[
-                (
-                    "id",
-                    models.BigAutoField(
-                        auto_created=True,
-                        primary_key=True,
-                        serialize=False,
-                        verbose_name="ID",
-                    ),
-                ),
-                (
-                    "kwota_do_zaplaty",
-                    models.DecimalField(
-                        decimal_places=2,
-                        default=0,
-                        max_digits=10,
-                        verbose_name="kwota do zapłaty",
-                    ),
-                ),
-                (
-                    "zgloszenie",
-                    models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE,
-                        related_name="finanse",
-                        to="rejs.zgloszenie",
-                    ),
-                ),
-            ],
-        ),
-        migrations.CreateModel(
-            name="Wplata",
-            fields=[
-                (
-                    "id",
-                    models.BigAutoField(
-                        auto_created=True,
-                        primary_key=True,
-                        serialize=False,
-                        verbose_name="ID",
-                    ),
-                ),
-                (
-                    "kwota",
-                    models.DecimalField(decimal_places=2, default=0, max_digits=10),
-                ),
-                ("data", models.DateTimeField(auto_now_add=True)),
-                (
-                    "finanse",
-                    models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE,
-                        related_name="wplaty",
-                        to="rejs.finanse",
-                    ),
-                ),
-            ],
-        ),
-    ]
+	operations = [
+		migrations.AddField(
+			model_name="rejs",
+			name="cena",
+			field=models.DecimalField(decimal_places=2, default=1500, max_digits=10),
+		),
+		migrations.AddField(
+			model_name="rejs",
+			name="zaliczka",
+			field=models.DecimalField(decimal_places=2, default=500, max_digits=10),
+		),
+		migrations.AddField(
+			model_name="zgloszenie",
+			name="status",
+			field=models.CharField(
+				choices=[
+					("QUALIFIED", "zakfalifikowany"),
+					("NOT_QUALIFIED", "nie zakfalifikowany"),
+				],
+				default=("NOT_QUALIFIED", "nie zakfalifikowany"),
+				max_length=20,
+			),
+		),
+		migrations.CreateModel(
+			name="Finanse",
+			fields=[
+				(
+					"id",
+					models.BigAutoField(
+						auto_created=True,
+						primary_key=True,
+						serialize=False,
+						verbose_name="ID",
+					),
+				),
+				(
+					"kwota_do_zaplaty",
+					models.DecimalField(
+						decimal_places=2,
+						default=0,
+						max_digits=10,
+						verbose_name="kwota do zapłaty",
+					),
+				),
+				(
+					"zgloszenie",
+					models.ForeignKey(
+						on_delete=django.db.models.deletion.CASCADE,
+						related_name="finanse",
+						to="rejs.zgloszenie",
+					),
+				),
+			],
+		),
+		migrations.CreateModel(
+			name="Wplata",
+			fields=[
+				(
+					"id",
+					models.BigAutoField(
+						auto_created=True,
+						primary_key=True,
+						serialize=False,
+						verbose_name="ID",
+					),
+				),
+				(
+					"kwota",
+					models.DecimalField(decimal_places=2, default=0, max_digits=10),
+				),
+				("data", models.DateTimeField(auto_now_add=True)),
+				(
+					"finanse",
+					models.ForeignKey(
+						on_delete=django.db.models.deletion.CASCADE,
+						related_name="wplaty",
+						to="rejs.finanse",
+					),
+				),
+			],
+		),
+	]

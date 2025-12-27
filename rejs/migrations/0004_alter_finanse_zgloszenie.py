@@ -5,19 +5,18 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+	dependencies = [
+		("rejs", "0003_rejs_cena_rejs_zaliczka_zgloszenie_status_finanse_and_more"),
+	]
 
-    dependencies = [
-        ("rejs", "0003_rejs_cena_rejs_zaliczka_zgloszenie_status_finanse_and_more"),
-    ]
-
-    operations = [
-        migrations.AlterField(
-            model_name="finanse",
-            name="zgloszenie",
-            field=models.OneToOneField(
-                on_delete=django.db.models.deletion.CASCADE,
-                related_name="finanse",
-                to="rejs.zgloszenie",
-            ),
-        ),
-    ]
+	operations = [
+		migrations.AlterField(
+			model_name="finanse",
+			name="zgloszenie",
+			field=models.OneToOneField(
+				on_delete=django.db.models.deletion.CASCADE,
+				related_name="finanse",
+				to="rejs.zgloszenie",
+			),
+		),
+	]

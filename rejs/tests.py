@@ -1,3 +1,4 @@
+import datetime
 from decimal import Decimal
 from unittest.mock import patch
 
@@ -12,711 +13,745 @@ from .forms import ZgloszenieForm
 from .models import Ogloszenie, Rejs, Wachta, Wplata, Zgloszenie
 
 
+# Helper to get future dates for tests
+def future_date(days_from_now: int) -> str:
+	"""Return a date string N days from today."""
+	return (datetime.date.today() + datetime.timedelta(days=days_from_now)).isoformat()
+
+
 class RejsModelTest(TestCase):
-    """Testy modelu Rejs."""
+	"""Testy modelu Rejs."""
 
-    def setUp(self):
-        self.rejs = Rejs.objects.create(
-            nazwa="Rejs testowy",
-            od="2025-07-01",
-            do="2025-07-14",
-            start="Gdynia",
-            koniec="Sztokholm",
-            cena=Decimal("1500.00"),
-            zaliczka=Decimal("500.00"),
-            opis="Opis testowego rejsu",
-        )
+	def setUp(self):
+		self.rejs = Rejs.objects.create(
+			nazwa="Rejs testowy",
+			od=future_date(30),
+			do=future_date(44),
+			start="Gdynia",
+			koniec="Sztokholm",
+			cena=Decimal("1500.00"),
+			zaliczka=Decimal("500.00"),
+			opis="Opis testowego rejsu",
+		)
 
-    def test_str_representation(self):
-        """Test reprezentacji tekstowej rejsu."""
-        self.assertEqual(str(self.rejs), "Rejs testowy")
+	def test_str_representation(self):
+		"""Test reprezentacji tekstowej rejsu."""
+		self.assertEqual(str(self.rejs), "Rejs testowy")
 
-    def test_reszta_do_zaplaty(self):
-        """Test obliczania reszty do zapłaty."""
-        self.assertEqual(self.rejs.reszta_do_zaplaty, Decimal("1000.00"))
+	def test_reszta_do_zaplaty(self):
+		"""Test obliczania reszty do zapłaty."""
+		self.assertEqual(self.rejs.reszta_do_zaplaty, Decimal("1000.00"))
 
-    def test_reszta_do_zaplaty_custom_values(self):
-        """Test reszty do zapłaty z niestandardowymi wartościami."""
-        rejs = Rejs.objects.create(
-            nazwa="Rejs drogi",
-            od="2025-08-01",
-            do="2025-08-14",
-            start="Gdańsk",
-            koniec="Kopenhaga",
-            cena=Decimal("2500.00"),
-            zaliczka=Decimal("800.00"),
-        )
-        self.assertEqual(rejs.reszta_do_zaplaty, Decimal("1700.00"))
+	def test_reszta_do_zaplaty_custom_values(self):
+		"""Test reszty do zapłaty z niestandardowymi wartościami."""
+		rejs = Rejs.objects.create(
+			nazwa="Rejs drogi",
+			od=future_date(60),
+			do=future_date(74),
+			start="Gdańsk",
+			koniec="Kopenhaga",
+			cena=Decimal("2500.00"),
+			zaliczka=Decimal("800.00"),
+		)
+		self.assertEqual(rejs.reszta_do_zaplaty, Decimal("1700.00"))
 
 
 class WachtaModelTest(TestCase):
-    """Testy modelu Wachta."""
+	"""Testy modelu Wachta."""
 
-    def setUp(self):
-        self.rejs = Rejs.objects.create(
-            nazwa="Rejs testowy",
-            od="2025-07-01",
-            do="2025-07-14",
-            start="Gdynia",
-            koniec="Sztokholm",
-        )
-        self.wachta = Wachta.objects.create(rejs=self.rejs, nazwa="Alfa")
+	def setUp(self):
+		self.rejs = Rejs.objects.create(
+			nazwa="Rejs testowy",
+			od=future_date(30),
+			do=future_date(44),
+			start="Gdynia",
+			koniec="Sztokholm",
+		)
+		self.wachta = Wachta.objects.create(rejs=self.rejs, nazwa="Alfa")
 
-    def test_str_representation(self):
-        """Test reprezentacji tekstowej wachty."""
-        self.assertEqual(str(self.wachta), "Wachta Alfa - Rejs testowy")
+	def test_str_representation(self):
+		"""Test reprezentacji tekstowej wachty."""
+		self.assertEqual(str(self.wachta), "Wachta Alfa - Rejs testowy")
 
 
 class ZgloszenieModelTest(TestCase):
-    """Testy modelu Zgloszenie."""
+	"""Testy modelu Zgloszenie."""
 
-    def setUp(self):
-        self.rejs = Rejs.objects.create(
-            nazwa="Rejs testowy",
-            od="2025-07-01",
-            do="2025-07-14",
-            start="Gdynia",
-            koniec="Sztokholm",
-            cena=Decimal("1500.00"),
-            zaliczka=Decimal("500.00"),
-        )
-        self.zgloszenie = Zgloszenie.objects.create(
-            imie="Jan",
-            nazwisko="Kowalski",
-            email="jan@example.com",
-            telefon="123456789",
-            rejs=self.rejs,
-            rodo=True,
-            obecnosc="tak",
-        )
+	def setUp(self):
+		self.rejs = Rejs.objects.create(
+			nazwa="Rejs testowy",
+			od=future_date(30),
+			do=future_date(44),
+			start="Gdynia",
+			koniec="Sztokholm",
+			cena=Decimal("1500.00"),
+			zaliczka=Decimal("500.00"),
+		)
+		self.zgloszenie = Zgloszenie.objects.create(
+			imie="Jan",
+			nazwisko="Kowalski",
+			email="jan@example.com",
+			telefon="123456789",
+			data_urodzenia=datetime.date(1990, 1, 1),
+			rejs=self.rejs,
+			rodo=True,
+			obecnosc="tak",
+		)
 
-    def test_str_representation(self):
-        """Test reprezentacji tekstowej zgłoszenia."""
-        self.assertEqual(str(self.zgloszenie), "Jan Kowalski")
+	def test_str_representation(self):
+		"""Test reprezentacji tekstowej zgłoszenia."""
+		self.assertEqual(str(self.zgloszenie), "Jan Kowalski")
 
-    def test_token_generated_on_create(self):
-        """Test czy token UUID jest generowany przy tworzeniu."""
-        self.assertIsNotNone(self.zgloszenie.token)
+	def test_token_generated_on_create(self):
+		"""Test czy token UUID jest generowany przy tworzeniu."""
+		self.assertIsNotNone(self.zgloszenie.token)
 
-    def test_token_is_unique(self):
-        """Test unikalności tokena."""
-        zgloszenie2 = Zgloszenie.objects.create(
-            imie="Anna",
-            nazwisko="Nowak",
-            email="anna@example.com",
-            telefon="987654321",
-            rejs=self.rejs,
-            rodo=True,
-            obecnosc="tak",
-        )
-        self.assertNotEqual(self.zgloszenie.token, zgloszenie2.token)
+	def test_token_is_unique(self):
+		"""Test unikalności tokena."""
+		zgloszenie2 = Zgloszenie.objects.create(
+			imie="Anna",
+			nazwisko="Nowak",
+			email="anna@example.com",
+			telefon="987654321",
+			data_urodzenia=datetime.date(1991, 2, 2),
+			rejs=self.rejs,
+			rodo=True,
+			obecnosc="tak",
+		)
+		self.assertNotEqual(self.zgloszenie.token, zgloszenie2.token)
 
-    def test_suma_wplat_empty(self):
-        """Test sumy wpłat gdy brak wpłat."""
-        self.assertEqual(self.zgloszenie.suma_wplat, Decimal("0"))
+	def test_suma_wplat_empty(self):
+		"""Test sumy wpłat gdy brak wpłat."""
+		self.assertEqual(self.zgloszenie.suma_wplat, Decimal("0"))
 
-    def test_suma_wplat_with_payments(self):
-        """Test sumy wpłat z wpłatami."""
-        Wplata.objects.create(
-            zgloszenie=self.zgloszenie, kwota=Decimal("500.00"), rodzaj="wplata"
-        )
-        Wplata.objects.create(
-            zgloszenie=self.zgloszenie, kwota=Decimal("300.00"), rodzaj="wplata"
-        )
-        self.assertEqual(self.zgloszenie.suma_wplat, Decimal("800.00"))
+	def test_suma_wplat_with_payments(self):
+		"""Test sumy wpłat z wpłatami."""
+		Wplata.objects.create(zgloszenie=self.zgloszenie, kwota=Decimal("500.00"), rodzaj="wplata")
+		Wplata.objects.create(zgloszenie=self.zgloszenie, kwota=Decimal("300.00"), rodzaj="wplata")
+		self.assertEqual(self.zgloszenie.suma_wplat, Decimal("800.00"))
 
-    def test_suma_wplat_with_zwroty(self):
-        """Test sumy wpłat z wpłatami i zwrotami."""
-        Wplata.objects.create(
-            zgloszenie=self.zgloszenie, kwota=Decimal("500.00"), rodzaj="wplata"
-        )
-        Wplata.objects.create(
-            zgloszenie=self.zgloszenie, kwota=Decimal("100.00"), rodzaj="zwrot"
-        )
-        self.assertEqual(self.zgloszenie.suma_wplat, Decimal("400.00"))
+	def test_suma_wplat_with_zwroty(self):
+		"""Test sumy wpłat z wpłatami i zwrotami."""
+		Wplata.objects.create(zgloszenie=self.zgloszenie, kwota=Decimal("500.00"), rodzaj="wplata")
+		Wplata.objects.create(zgloszenie=self.zgloszenie, kwota=Decimal("100.00"), rodzaj="zwrot")
+		self.assertEqual(self.zgloszenie.suma_wplat, Decimal("400.00"))
 
-    def test_do_zaplaty_calculation(self):
-        """Test obliczania kwoty do zapłaty."""
-        self.assertEqual(self.zgloszenie.do_zaplaty, Decimal("1500.00"))
+	def test_do_zaplaty_calculation(self):
+		"""Test obliczania kwoty do zapłaty."""
+		self.assertEqual(self.zgloszenie.do_zaplaty, Decimal("1500.00"))
 
-        Wplata.objects.create(
-            zgloszenie=self.zgloszenie, kwota=Decimal("500.00"), rodzaj="wplata"
-        )
-        self.assertEqual(self.zgloszenie.do_zaplaty, Decimal("1000.00"))
+		Wplata.objects.create(zgloszenie=self.zgloszenie, kwota=Decimal("500.00"), rodzaj="wplata")
+		self.assertEqual(self.zgloszenie.do_zaplaty, Decimal("1000.00"))
 
-    def test_rejs_cena(self):
-        """Test właściwości rejs_cena."""
-        self.assertEqual(self.zgloszenie.rejs_cena, Decimal("1500.00"))
+	def test_rejs_cena(self):
+		"""Test właściwości rejs_cena."""
+		self.assertEqual(self.zgloszenie.rejs_cena, Decimal("1500.00"))
 
-    def test_clean_wachta_validation_same_rejs(self):
-        """Test walidacji - wachta z tego samego rejsu."""
-        wachta = Wachta.objects.create(rejs=self.rejs, nazwa="Alfa")
-        self.zgloszenie.wachta = wachta
-        self.zgloszenie.clean()
+	def test_clean_wachta_validation_same_rejs(self):
+		"""Test walidacji - wachta z tego samego rejsu."""
+		wachta = Wachta.objects.create(rejs=self.rejs, nazwa="Alfa")
+		self.zgloszenie.wachta = wachta
+		self.zgloszenie.clean()
 
-    def test_clean_wachta_validation_different_rejs(self):
-        """Test walidacji - wachta z innego rejsu."""
-        inny_rejs = Rejs.objects.create(
-            nazwa="Inny rejs",
-            od="2025-08-01",
-            do="2025-08-14",
-            start="Gdańsk",
-            koniec="Helsinki",
-        )
-        wachta = Wachta.objects.create(rejs=inny_rejs, nazwa="Beta")
-        self.zgloszenie.wachta = wachta
+	def test_clean_wachta_validation_different_rejs(self):
+		"""Test walidacji - wachta z innego rejsu."""
+		inny_rejs = Rejs.objects.create(
+			nazwa="Inny rejs",
+			od=future_date(60),
+			do=future_date(74),
+			start="Gdańsk",
+			koniec="Helsinki",
+		)
+		wachta = Wachta.objects.create(rejs=inny_rejs, nazwa="Beta")
+		self.zgloszenie.wachta = wachta
 
-        from django.forms import ValidationError
+		from django.forms import ValidationError
 
-        with self.assertRaises(ValidationError):
-            self.zgloszenie.clean()
+		with self.assertRaises(ValidationError):
+			self.zgloszenie.clean()
 
-    def test_get_absolute_url(self):
-        """Test generowania URL do szczegółów zgłoszenia."""
-        url = self.zgloszenie.get_absolute_url()
-        expected = reverse(
-            "zgloszenie_details", kwargs={"token": self.zgloszenie.token}
-        )
-        self.assertEqual(url, expected)
+	def test_get_absolute_url(self):
+		"""Test generowania URL do szczegółów zgłoszenia."""
+		url = self.zgloszenie.get_absolute_url()
+		expected = reverse("zgloszenie_details", kwargs={"token": self.zgloszenie.token})
+		self.assertEqual(url, expected)
 
 
 class WplataModelTest(TestCase):
-    """Testy modelu Wplata."""
+	"""Testy modelu Wplata."""
 
-    def setUp(self):
-        self.rejs = Rejs.objects.create(
-            nazwa="Rejs testowy",
-            od="2025-07-01",
-            do="2025-07-14",
-            start="Gdynia",
-            koniec="Sztokholm",
-        )
-        self.zgloszenie = Zgloszenie.objects.create(
-            imie="Jan",
-            nazwisko="Kowalski",
-            email="jan@example.com",
-            telefon="123456789",
-            rejs=self.rejs,
-            rodo=True,
-            obecnosc="tak",
-        )
+	def setUp(self):
+		self.rejs = Rejs.objects.create(
+			nazwa="Rejs testowy",
+			od=future_date(30),
+			do=future_date(44),
+			start="Gdynia",
+			koniec="Sztokholm",
+		)
+		self.zgloszenie = Zgloszenie.objects.create(
+			imie="Jan",
+			nazwisko="Kowalski",
+			email="jan@example.com",
+			telefon="123456789",
+			data_urodzenia=datetime.date(1990, 1, 1),
+			rejs=self.rejs,
+			rodo=True,
+			obecnosc="tak",
+		)
 
-    def test_str_representation(self):
-        """Test reprezentacji tekstowej wpłaty."""
-        wplata = Wplata.objects.create(
-            zgloszenie=self.zgloszenie, kwota=Decimal("500.00"), rodzaj="wplata"
-        )
-        self.assertEqual(str(wplata), "Wpłata: 500.00 zł")
+	def test_str_representation(self):
+		"""Test reprezentacji tekstowej wpłaty."""
+		wplata = Wplata.objects.create(zgloszenie=self.zgloszenie, kwota=Decimal("500.00"), rodzaj="wplata")
+		self.assertEqual(str(wplata), "Wpłata: 500.00 zł")
 
 
 class IndexViewTest(TestCase):
-    """Testy widoku listy rejsów."""
+	"""Testy widoku listy rejsów."""
 
-    def setUp(self):
-        self.client = Client()
+	def setUp(self):
+		self.client = Client()
 
-    def test_index_returns_200(self):
-        """Test czy strona główna zwraca status 200."""
-        response = self.client.get(reverse("index"))
-        self.assertEqual(response.status_code, 200)
+	def test_index_returns_200(self):
+		"""Test czy strona główna zwraca status 200."""
+		response = self.client.get(reverse("index"))
+		self.assertEqual(response.status_code, 200)
 
-    def test_index_uses_correct_template(self):
-        """Test czy używany jest prawidłowy szablon."""
-        response = self.client.get(reverse("index"))
-        self.assertTemplateUsed(response, "rejs/index.html")
+	def test_index_uses_correct_template(self):
+		"""Test czy używany jest prawidłowy szablon."""
+		response = self.client.get(reverse("index"))
+		self.assertTemplateUsed(response, "rejs/index.html")
 
-    def test_index_displays_rejsy(self):
-        """Test czy rejsy są wyświetlane."""
-        Rejs.objects.create(
-            nazwa="Rejs wakacyjny",
-            od="2025-07-01",
-            do="2025-07-14",
-            start="Gdynia",
-            koniec="Sztokholm",
-        )
-        response = self.client.get(reverse("index"))
-        self.assertContains(response, "Rejs wakacyjny")
+	def test_index_displays_rejsy(self):
+		"""Test czy rejsy są wyświetlane (tylko aktywne, przyszłe)."""
+		Rejs.objects.create(
+			nazwa="Rejs wakacyjny",
+			od=future_date(30),
+			do=future_date(44),
+			start="Gdynia",
+			koniec="Sztokholm",
+			aktywna_rekrutacja=True,
+		)
+		response = self.client.get(reverse("index"))
+		self.assertContains(response, "Rejs wakacyjny")
 
-    def test_index_empty_rejsy(self):
-        """Test strony gdy brak rejsów."""
-        response = self.client.get(reverse("index"))
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.context["rejsy"]), 0)
+	def test_index_empty_rejsy(self):
+		"""Test strony gdy brak rejsów."""
+		response = self.client.get(reverse("index"))
+		self.assertEqual(response.status_code, 200)
+		self.assertEqual(len(response.context["rejsy"]), 0)
 
-    def test_index_rejsy_ordered_by_date(self):
-        """Test czy rejsy są posortowane po dacie."""
-        rejs2 = Rejs.objects.create(
-            nazwa="Rejs późniejszy",
-            od="2025-08-01",
-            do="2025-08-14",
-            start="Gdańsk",
-            koniec="Helsinki",
-        )
-        rejs1 = Rejs.objects.create(
-            nazwa="Rejs wcześniejszy",
-            od="2025-07-01",
-            do="2025-07-14",
-            start="Gdynia",
-            koniec="Sztokholm",
-        )
-        response = self.client.get(reverse("index"))
-        rejsy = list(response.context["rejsy"])
-        self.assertEqual(rejsy[0], rejs1)
-        self.assertEqual(rejsy[1], rejs2)
+	def test_index_rejsy_ordered_by_date(self):
+		"""Test czy rejsy są posortowane po dacie."""
+		rejs2 = Rejs.objects.create(
+			nazwa="Rejs późniejszy",
+			od=future_date(60),
+			do=future_date(74),
+			start="Gdańsk",
+			koniec="Helsinki",
+			aktywna_rekrutacja=True,
+		)
+		rejs1 = Rejs.objects.create(
+			nazwa="Rejs wcześniejszy",
+			od=future_date(30),
+			do=future_date(44),
+			start="Gdynia",
+			koniec="Sztokholm",
+			aktywna_rekrutacja=True,
+		)
+		response = self.client.get(reverse("index"))
+		rejsy = list(response.context["rejsy"])
+		self.assertEqual(rejsy[0], rejs1)
+		self.assertEqual(rejsy[1], rejs2)
+
+	def test_index_hides_inactive_rekrutacja(self):
+		"""Test czy rejsy z nieaktywną rekrutacją są ukryte."""
+		Rejs.objects.create(
+			nazwa="Rejs nieaktywny",
+			od=future_date(30),
+			do=future_date(44),
+			start="Gdynia",
+			koniec="Sztokholm",
+			aktywna_rekrutacja=False,
+		)
+		response = self.client.get(reverse("index"))
+		self.assertEqual(len(response.context["rejsy"]), 0)
+
+	def test_index_hides_past_rejsy(self):
+		"""Test czy przeszłe rejsy są ukryte."""
+		Rejs.objects.create(
+			nazwa="Rejs przeszły",
+			od="2020-07-01",
+			do="2020-07-14",
+			start="Gdynia",
+			koniec="Sztokholm",
+			aktywna_rekrutacja=True,
+		)
+		response = self.client.get(reverse("index"))
+		self.assertEqual(len(response.context["rejsy"]), 0)
 
 
 class ZgloszenieCreateViewTest(TestCase):
-    """Testy widoku tworzenia zgłoszenia."""
+	"""Testy widoku tworzenia zgłoszenia."""
 
-    def setUp(self):
-        self.client = Client()
-        self.rejs = Rejs.objects.create(
-            nazwa="Rejs testowy",
-            od="2025-07-01",
-            do="2025-07-14",
-            start="Gdynia",
-            koniec="Sztokholm",
-        )
+	def setUp(self):
+		self.client = Client()
+		self.rejs = Rejs.objects.create(
+			nazwa="Rejs testowy",
+			od=future_date(30),
+			do=future_date(44),
+			start="Gdynia",
+			koniec="Sztokholm",
+			aktywna_rekrutacja=True,
+		)
 
-    def test_get_form(self):
-        """Test wyświetlania formularza."""
-        response = self.client.get(
-            reverse("zgloszenie_utworz", kwargs={"rejs_id": self.rejs.id})
-        )
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "rejs/zgloszenie_form.html")
-        self.assertIsInstance(response.context["form"], ZgloszenieForm)
+	def test_get_form(self):
+		"""Test wyświetlania formularza."""
+		response = self.client.get(reverse("zgloszenie_utworz", kwargs={"rejs_id": self.rejs.id}))
+		self.assertEqual(response.status_code, 200)
+		self.assertTemplateUsed(response, "rejs/zgloszenie_form.html")
+		self.assertIsInstance(response.context["form"], ZgloszenieForm)
 
-    def test_get_form_nonexistent_rejs(self):
-        """Test formularza dla nieistniejącego rejsu."""
-        response = self.client.get(
-            reverse("zgloszenie_utworz", kwargs={"rejs_id": 99999})
-        )
-        self.assertEqual(response.status_code, 404)
+	def test_get_form_nonexistent_rejs(self):
+		"""Test formularza dla nieistniejącego rejsu."""
+		response = self.client.get(reverse("zgloszenie_utworz", kwargs={"rejs_id": 99999}))
+		self.assertEqual(response.status_code, 404)
 
-    def test_post_valid_form(self):
-        """Test wysłania poprawnego formularza."""
-        data = {
-            "imie": "Jan",
-            "nazwisko": "Kowalski",
-            "email": "jan@example.com",
-            "telefon": "123456789",
-            "data_urodzenia": "1990-01-01",
-            "adres": "ul. Testowa 1",
-            "kod_pocztowy": "00-001",
-            "miejscowosc": "Warszawa",
-            "wzrok": "NIEWIDOMY",
-            "obecnosc": "tak",
-            "rodo": True,
-        }
-        response = self.client.post(
-            reverse("zgloszenie_utworz", kwargs={"rejs_id": self.rejs.id}), data
-        )
-        self.assertEqual(Zgloszenie.objects.count(), 1)
-        zgloszenie = Zgloszenie.objects.first()
-        self.assertRedirects(
-            response,
-            reverse("zgloszenie_details", kwargs={"token": zgloszenie.token}),
-        )
+	def test_get_form_inactive_rejs_redirects(self):
+		"""Test że formularz dla rejsu z nieaktywną rekrutacją przekierowuje na index."""
+		self.rejs.aktywna_rekrutacja = False
+		self.rejs.save()
+		response = self.client.get(reverse("zgloszenie_utworz", kwargs={"rejs_id": self.rejs.id}))
+		self.assertRedirects(response, reverse("index"))
 
-    def test_post_invalid_form_missing_fields(self):
-        """Test wysłania formularza z brakującymi polami."""
-        data = {
-            "imie": "Jan",
-        }
-        response = self.client.post(
-            reverse("zgloszenie_utworz", kwargs={"rejs_id": self.rejs.id}), data
-        )
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(Zgloszenie.objects.count(), 0)
-        self.assertFormError(
-            response.context["form"], "nazwisko", "To pole jest wymagane."
-        )
+	def test_get_form_past_rejs_redirects(self):
+		"""Test że formularz dla przeszłego rejsu przekierowuje na index."""
+		self.rejs.od = "2020-07-01"
+		self.rejs.do = "2020-07-14"
+		self.rejs.save()
+		response = self.client.get(reverse("zgloszenie_utworz", kwargs={"rejs_id": self.rejs.id}))
+		self.assertRedirects(response, reverse("index"))
 
-    def test_post_invalid_telefon(self):
-        """Test wysłania formularza z nieprawidłowym telefonem."""
-        data = {
-            "imie": "Jan",
-            "nazwisko": "Kowalski",
-            "email": "jan@example.com",
-            "telefon": "abc",
-            "data_urodzenia": "1990-01-01",
-            "adres": "ul. Testowa 1",
-            "kod_pocztowy": "00-001",
-            "miejscowosc": "Warszawa",
-            "wzrok": "NIEWIDOMY",
-            "obecnosc": "tak",
-            "rodo": True,
-        }
-        response = self.client.post(
-            reverse("zgloszenie_utworz", kwargs={"rejs_id": self.rejs.id}), data
-        )
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(Zgloszenie.objects.count(), 0)
+	def test_post_valid_form(self):
+		"""Test wysłania poprawnego formularza."""
+		data = {
+			"imie": "Jan",
+			"nazwisko": "Kowalski",
+			"email": "jan@example.com",
+			"telefon": "123456789",
+			"data_urodzenia": "1990-01-01",
+			"adres": "ul. Testowa 1",
+			"kod_pocztowy": "00-001",
+			"miejscowosc": "Warszawa",
+			"wzrok": "NIEWIDOMY",
+			"obecnosc": "tak",
+			"rodo": True,
+		}
+		response = self.client.post(reverse("zgloszenie_utworz", kwargs={"rejs_id": self.rejs.id}), data)
+		self.assertEqual(Zgloszenie.objects.count(), 1)
+		zgloszenie = Zgloszenie.objects.first()
+		self.assertRedirects(
+			response,
+			reverse("zgloszenie_details", kwargs={"token": zgloszenie.token}),
+		)
+
+	def test_post_invalid_form_missing_fields(self):
+		"""Test wysłania formularza z brakującymi polami."""
+		data = {
+			"imie": "Jan",
+		}
+		response = self.client.post(reverse("zgloszenie_utworz", kwargs={"rejs_id": self.rejs.id}), data)
+		self.assertEqual(response.status_code, 200)
+		self.assertEqual(Zgloszenie.objects.count(), 0)
+		self.assertFormError(response.context["form"], "nazwisko", "To pole jest wymagane.")
+
+	def test_post_invalid_telefon(self):
+		"""Test wysłania formularza z nieprawidłowym telefonem."""
+		data = {
+			"imie": "Jan",
+			"nazwisko": "Kowalski",
+			"email": "jan@example.com",
+			"telefon": "abc",
+			"data_urodzenia": "1990-01-01",
+			"adres": "ul. Testowa 1",
+			"kod_pocztowy": "00-001",
+			"miejscowosc": "Warszawa",
+			"wzrok": "NIEWIDOMY",
+			"obecnosc": "tak",
+			"rodo": True,
+		}
+		response = self.client.post(reverse("zgloszenie_utworz", kwargs={"rejs_id": self.rejs.id}), data)
+		self.assertEqual(response.status_code, 200)
+		self.assertEqual(Zgloszenie.objects.count(), 0)
 
 
 class ZgloszenieDetailsViewTest(TestCase):
-    """Testy widoku szczegółów zgłoszenia."""
+	"""Testy widoku szczegółów zgłoszenia."""
 
-    def setUp(self):
-        self.client = Client()
-        self.rejs = Rejs.objects.create(
-            nazwa="Rejs testowy",
-            od="2025-07-01",
-            do="2025-07-14",
-            start="Gdynia",
-            koniec="Sztokholm",
-        )
-        self.zgloszenie = Zgloszenie.objects.create(
-            imie="Jan",
-            nazwisko="Kowalski",
-            email="jan@example.com",
-            telefon="123456789",
-            rejs=self.rejs,
-            rodo=True,
-            obecnosc="tak",
-        )
+	def setUp(self):
+		self.client = Client()
+		self.rejs = Rejs.objects.create(
+			nazwa="Rejs testowy",
+			od=future_date(30),
+			do=future_date(44),
+			start="Gdynia",
+			koniec="Sztokholm",
+		)
+		self.zgloszenie = Zgloszenie.objects.create(
+			imie="Jan",
+			nazwisko="Kowalski",
+			email="jan@example.com",
+			telefon="123456789",
+			data_urodzenia=datetime.date(1990, 1, 1),
+			rejs=self.rejs,
+			rodo=True,
+			obecnosc="tak",
+		)
 
-    def test_get_details_by_token(self):
-        """Test wyświetlania szczegółów po tokenie."""
-        response = self.client.get(
-            reverse("zgloszenie_details", kwargs={"token": self.zgloszenie.token})
-        )
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "rejs/zgloszenie_details.html")
-        self.assertEqual(response.context["zgloszenie"], self.zgloszenie)
+	def test_get_details_by_token(self):
+		"""Test wyświetlania szczegółów po tokenie."""
+		response = self.client.get(reverse("zgloszenie_details", kwargs={"token": self.zgloszenie.token}))
+		self.assertEqual(response.status_code, 200)
+		self.assertTemplateUsed(response, "rejs/zgloszenie_details.html")
+		self.assertEqual(response.context["zgloszenie"], self.zgloszenie)
 
-    def test_invalid_token_returns_404(self):
-        """Test 404 dla nieprawidłowego tokena."""
-        import uuid
+	def test_invalid_token_returns_404(self):
+		"""Test 404 dla nieprawidłowego tokena."""
+		import uuid
 
-        fake_token = uuid.uuid4()
-        response = self.client.get(
-            reverse("zgloszenie_details", kwargs={"token": fake_token})
-        )
-        self.assertEqual(response.status_code, 404)
+		fake_token = uuid.uuid4()
+		response = self.client.get(reverse("zgloszenie_details", kwargs={"token": fake_token}))
+		self.assertEqual(response.status_code, 404)
 
-    def test_details_contains_personal_data(self):
-        """Test czy szczegóły zawierają dane osobowe."""
-        response = self.client.get(
-            reverse("zgloszenie_details", kwargs={"token": self.zgloszenie.token})
-        )
-        self.assertContains(response, "Jan")
-        self.assertContains(response, "Kowalski")
+	def test_details_contains_personal_data(self):
+		"""Test czy szczegóły zawierają dane osobowe."""
+		response = self.client.get(reverse("zgloszenie_details", kwargs={"token": self.zgloszenie.token}))
+		self.assertContains(response, "Jan")
+		self.assertContains(response, "Kowalski")
 
 
 class ZgloszenieFormTest(TestCase):
-    """Testy formularza zgłoszenia."""
+	"""Testy formularza zgłoszenia."""
 
-    def get_valid_form_data(self, **overrides):
-        """Zwraca słownik z poprawnymi danymi formularza."""
-        data = {
-            "imie": "Jan",
-            "nazwisko": "Kowalski",
-            "email": "jan@example.com",
-            "telefon": "123456789",
-            "data_urodzenia": "1990-01-01",
-            "adres": "ul. Testowa 1",
-            "kod_pocztowy": "00-001",
-            "miejscowosc": "Warszawa",
-            "wzrok": "NIEWIDOMY",
-            "obecnosc": "tak",
-            "rodo": True,
-        }
-        data.update(overrides)
-        return data
+	def setUp(self):
+		self.rejs = Rejs.objects.create(
+			nazwa="Rejs testowy",
+			od=future_date(30),
+			do=future_date(44),
+			start="Gdynia",
+			koniec="Sztokholm",
+		)
 
-    def test_valid_form(self):
-        """Test poprawnego formularza."""
-        form = ZgloszenieForm(data=self.get_valid_form_data())
-        self.assertTrue(form.is_valid())
+	def get_valid_form_data(self, **overrides):
+		"""Zwraca słownik z poprawnymi danymi formularza."""
+		data = {
+			"imie": "Jan",
+			"nazwisko": "Kowalski",
+			"email": "jan@example.com",
+			"telefon": "123456789",
+			"data_urodzenia": "1990-01-01",
+			"adres": "ul. Testowa 1",
+			"kod_pocztowy": "00-001",
+			"miejscowosc": "Warszawa",
+			"wzrok": "NIEWIDOMY",
+			"obecnosc": "tak",
+			"rodo": True,
+		}
+		data.update(overrides)
+		return data
 
-    def test_telefon_validation_9_digits(self):
-        """Test walidacji telefonu - 9 cyfr."""
-        form = ZgloszenieForm(data=self.get_valid_form_data(telefon="123456789"))
-        self.assertTrue(form.is_valid())
+	def test_valid_form(self):
+		"""Test poprawnego formularza."""
+		form = ZgloszenieForm(data=self.get_valid_form_data(), initial={"rejs": self.rejs})
+		self.assertTrue(form.is_valid())
 
-    def test_telefon_validation_with_plus(self):
-        """Test walidacji telefonu z +."""
-        form = ZgloszenieForm(data=self.get_valid_form_data(telefon="+48123456789"))
-        self.assertTrue(form.is_valid())
+	def test_telefon_validation_9_digits(self):
+		"""Test walidacji telefonu - 9 cyfr."""
+		form = ZgloszenieForm(data=self.get_valid_form_data(telefon="123456789"), initial={"rejs": self.rejs})
+		self.assertTrue(form.is_valid())
 
-    def test_telefon_validation_15_digits(self):
-        """Test walidacji telefonu - 15 cyfr."""
-        form = ZgloszenieForm(data=self.get_valid_form_data(telefon="123456789012345"))
-        self.assertTrue(form.is_valid())
+	def test_telefon_validation_with_plus(self):
+		"""Test walidacji telefonu z +."""
+		form = ZgloszenieForm(data=self.get_valid_form_data(telefon="+48123456789"), initial={"rejs": self.rejs})
+		self.assertTrue(form.is_valid())
 
-    def test_telefon_validation_invalid_letters(self):
-        """Test walidacji telefonu - litery."""
-        form = ZgloszenieForm(data=self.get_valid_form_data(telefon="abc123def"))
-        self.assertFalse(form.is_valid())
-        self.assertIn("telefon", form.errors)
+	def test_telefon_validation_15_digits(self):
+		"""Test walidacji telefonu - 15 cyfr."""
+		form = ZgloszenieForm(data=self.get_valid_form_data(telefon="123456789012345"), initial={"rejs": self.rejs})
+		self.assertTrue(form.is_valid())
 
-    def test_telefon_validation_too_short(self):
-        """Test walidacji telefonu - za krótki."""
-        form = ZgloszenieForm(data=self.get_valid_form_data(telefon="12345678"))
-        self.assertFalse(form.is_valid())
+	def test_telefon_validation_invalid_letters(self):
+		"""Test walidacji telefonu - litery."""
+		form = ZgloszenieForm(data=self.get_valid_form_data(telefon="abc123def"), initial={"rejs": self.rejs})
+		self.assertFalse(form.is_valid())
+		self.assertIn("telefon", form.errors)
 
-    def test_telefon_cleans_spaces_and_dashes(self):
-        """Test czy telefon jest czyszczony ze spacji i myślników."""
-        form = ZgloszenieForm(data=self.get_valid_form_data(telefon="123-456-789"))
-        self.assertTrue(form.is_valid())
-        self.assertEqual(form.cleaned_data["telefon"], "123456789")
+	def test_telefon_validation_too_short(self):
+		"""Test walidacji telefonu - za krótki."""
+		form = ZgloszenieForm(data=self.get_valid_form_data(telefon="12345678"), initial={"rejs": self.rejs})
+		self.assertFalse(form.is_valid())
 
-    def test_required_fields(self):
-        """Test wymaganych pól."""
-        form = ZgloszenieForm(data={})
-        self.assertFalse(form.is_valid())
-        self.assertIn("imie", form.errors)
-        self.assertIn("nazwisko", form.errors)
-        self.assertIn("email", form.errors)
-        self.assertIn("telefon", form.errors)
+	def test_telefon_cleans_spaces_and_dashes(self):
+		"""Test czy telefon jest czyszczony ze spacji i myślników."""
+		form = ZgloszenieForm(data=self.get_valid_form_data(telefon="123-456-789"), initial={"rejs": self.rejs})
+		self.assertTrue(form.is_valid())
+		self.assertEqual(form.cleaned_data["telefon"], "123456789")
 
-    def test_invalid_email(self):
-        """Test nieprawidłowego emaila."""
-        form = ZgloszenieForm(
-            data=self.get_valid_form_data(email="nieprawidlowy-email")
-        )
-        self.assertFalse(form.is_valid())
-        self.assertIn("email", form.errors)
+	def test_required_fields(self):
+		"""Test wymaganych pól."""
+		form = ZgloszenieForm(data={}, initial={"rejs": self.rejs})
+		self.assertFalse(form.is_valid())
+		self.assertIn("imie", form.errors)
+		self.assertIn("nazwisko", form.errors)
+		self.assertIn("email", form.errors)
+		self.assertIn("telefon", form.errors)
+
+	def test_invalid_email(self):
+		"""Test nieprawidłowego emaila."""
+		form = ZgloszenieForm(data=self.get_valid_form_data(email="nieprawidlowy-email"), initial={"rejs": self.rejs})
+		self.assertFalse(form.is_valid())
+		self.assertIn("email", form.errors)
 
 
 class SignalsTest(TestCase):
-    """Testy sygnałów wysyłających emaile."""
+	"""Testy sygnałów wysyłających emaile."""
 
-    def setUp(self):
-        self.rejs = Rejs.objects.create(
-            nazwa="Rejs testowy",
-            od="2025-07-01",
-            do="2025-07-14",
-            start="Gdynia",
-            koniec="Sztokholm",
-            cena=Decimal("1500.00"),
-            zaliczka=Decimal("500.00"),
-        )
+	def setUp(self):
+		self.rejs = Rejs.objects.create(
+			nazwa="Rejs testowy",
+			od=future_date(30),
+			do=future_date(44),
+			start="Gdynia",
+			koniec="Sztokholm",
+			cena=Decimal("1500.00"),
+			zaliczka=Decimal("500.00"),
+		)
 
-    def test_email_sent_on_zgloszenie_create(self):
-        """Test wysyłania emaila przy tworzeniu zgłoszenia."""
-        Zgloszenie.objects.create(
-            imie="Jan",
-            nazwisko="Kowalski",
-            email="jan@example.com",
-            telefon="123456789",
-            rejs=self.rejs,
-            rodo=True,
-            obecnosc="tak",
-        )
-        self.assertEqual(len(mail.outbox), 1)
-        self.assertIn("Potwierdzenie zgłoszenia", mail.outbox[0].subject)
-        self.assertEqual(mail.outbox[0].to, ["jan@example.com"])
+	def test_email_sent_on_zgloszenie_create(self):
+		"""Test wysyłania emaila przy tworzeniu zgłoszenia."""
+		Zgloszenie.objects.create(
+			imie="Jan",
+			nazwisko="Kowalski",
+			email="jan@example.com",
+			telefon="123456789",
+			data_urodzenia=datetime.date(1990, 1, 1),
+			rejs=self.rejs,
+			rodo=True,
+			obecnosc="tak",
+		)
+		self.assertEqual(len(mail.outbox), 1)
+		self.assertIn("Potwierdzenie zgłoszenia", mail.outbox[0].subject)
+		self.assertEqual(mail.outbox[0].to, ["jan@example.com"])
 
-    def test_email_sent_on_status_change_qualified(self):
-        """Test wysyłania emaila przy zmianie statusu na zakwalifikowany."""
-        zgloszenie = Zgloszenie.objects.create(
-            imie="Jan",
-            nazwisko="Kowalski",
-            email="jan@example.com",
-            telefon="123456789",
-            rejs=self.rejs,
-            status=Zgloszenie.STATUS_NIEZAKWALIFIKOWANY,
-            rodo=True,
-            obecnosc="tak",
-        )
-        mail.outbox.clear()
+	def test_email_sent_on_status_change_qualified(self):
+		"""Test wysyłania emaila przy zmianie statusu na zakwalifikowany."""
+		zgloszenie = Zgloszenie.objects.create(
+			imie="Jan",
+			nazwisko="Kowalski",
+			email="jan@example.com",
+			telefon="123456789",
+			data_urodzenia=datetime.date(1990, 1, 1),
+			rejs=self.rejs,
+			status=Zgloszenie.STATUS_NIEZAKWALIFIKOWANY,
+			rodo=True,
+			obecnosc="tak",
+		)
+		mail.outbox.clear()
 
-        zgloszenie.status = Zgloszenie.STATUS_ZAKWALIFIKOWANY
-        zgloszenie.save()
+		zgloszenie.status = Zgloszenie.STATUS_ZAKWALIFIKOWANY
+		zgloszenie.save()
 
-        self.assertEqual(len(mail.outbox), 1)
-        self.assertIn("zakwalifikowanie", mail.outbox[0].subject)
+		self.assertEqual(len(mail.outbox), 1)
+		self.assertIn("zakwalifikowanie", mail.outbox[0].subject)
 
-    def test_email_sent_on_status_change_odrzucone(self):
-        """Test wysyłania emaila przy zmianie statusu na odrzucone."""
-        zgloszenie = Zgloszenie.objects.create(
-            imie="Jan",
-            nazwisko="Kowalski",
-            email="jan@example.com",
-            telefon="123456789",
-            rejs=self.rejs,
-            status=Zgloszenie.STATUS_NIEZAKWALIFIKOWANY,
-            rodo=True,
-            obecnosc="tak",
-        )
-        mail.outbox.clear()
+	def test_email_sent_on_status_change_odrzucone(self):
+		"""Test wysyłania emaila przy zmianie statusu na odrzucone."""
+		zgloszenie = Zgloszenie.objects.create(
+			imie="Jan",
+			nazwisko="Kowalski",
+			email="jan@example.com",
+			telefon="123456789",
+			data_urodzenia=datetime.date(1990, 1, 1),
+			rejs=self.rejs,
+			status=Zgloszenie.STATUS_NIEZAKWALIFIKOWANY,
+			rodo=True,
+			obecnosc="tak",
+		)
+		mail.outbox.clear()
 
-        zgloszenie.status = Zgloszenie.STATUS_ODRZUCONE
-        zgloszenie.save()
+		zgloszenie.status = Zgloszenie.STATUS_ODRZUCONE
+		zgloszenie.save()
 
-        self.assertEqual(len(mail.outbox), 1)
-        self.assertIn("Odrzucone", mail.outbox[0].subject)
+		self.assertEqual(len(mail.outbox), 1)
+		self.assertIn("Odrzucone", mail.outbox[0].subject)
 
-    def test_no_email_on_same_status(self):
-        """Test braku emaila gdy status się nie zmienia."""
-        zgloszenie = Zgloszenie.objects.create(
-            imie="Jan",
-            nazwisko="Kowalski",
-            email="jan@example.com",
-            telefon="123456789",
-            rejs=self.rejs,
-            status=Zgloszenie.STATUS_NIEZAKWALIFIKOWANY,
-            rodo=True,
-            obecnosc="tak",
-        )
-        mail.outbox.clear()
+	def test_no_email_on_same_status(self):
+		"""Test braku emaila gdy status się nie zmienia."""
+		zgloszenie = Zgloszenie.objects.create(
+			imie="Jan",
+			nazwisko="Kowalski",
+			email="jan@example.com",
+			telefon="123456789",
+			data_urodzenia=datetime.date(1990, 1, 1),
+			rejs=self.rejs,
+			status=Zgloszenie.STATUS_NIEZAKWALIFIKOWANY,
+			rodo=True,
+			obecnosc="tak",
+		)
+		mail.outbox.clear()
 
-        zgloszenie.imie = "Janusz"
-        zgloszenie.save()
+		zgloszenie.imie = "Janusz"
+		zgloszenie.save()
 
-        self.assertEqual(len(mail.outbox), 0)
+		self.assertEqual(len(mail.outbox), 0)
 
-    def test_email_sent_on_wachta_assignment(self):
-        """Test wysyłania emaila przy przypisaniu do wachty."""
-        zgloszenie = Zgloszenie.objects.create(
-            imie="Jan",
-            nazwisko="Kowalski",
-            email="jan@example.com",
-            telefon="123456789",
-            rejs=self.rejs,
-            rodo=True,
-            obecnosc="tak",
-        )
-        wachta = Wachta.objects.create(rejs=self.rejs, nazwa="Alfa")
-        mail.outbox.clear()
+	def test_email_sent_on_wachta_assignment(self):
+		"""Test wysyłania emaila przy przypisaniu do wachty."""
+		zgloszenie = Zgloszenie.objects.create(
+			imie="Jan",
+			nazwisko="Kowalski",
+			email="jan@example.com",
+			telefon="123456789",
+			data_urodzenia=datetime.date(1990, 1, 1),
+			rejs=self.rejs,
+			rodo=True,
+			obecnosc="tak",
+		)
+		wachta = Wachta.objects.create(rejs=self.rejs, nazwa="Alfa")
+		mail.outbox.clear()
 
-        zgloszenie.wachta = wachta
-        zgloszenie.save()
+		zgloszenie.wachta = wachta
+		zgloszenie.save()
 
-        self.assertEqual(len(mail.outbox), 1)
-        self.assertIn("wachty", mail.outbox[0].subject)
+		self.assertEqual(len(mail.outbox), 1)
+		self.assertIn("wachty", mail.outbox[0].subject)
 
-    def test_email_sent_on_wplata_create(self):
-        """Test wysyłania emaila przy tworzeniu wpłaty."""
-        zgloszenie = Zgloszenie.objects.create(
-            imie="Jan",
-            nazwisko="Kowalski",
-            email="jan@example.com",
-            telefon="123456789",
-            rejs=self.rejs,
-            rodo=True,
-            obecnosc="tak",
-        )
-        mail.outbox.clear()
+	def test_email_sent_on_wplata_create(self):
+		"""Test wysyłania emaila przy tworzeniu wpłaty."""
+		zgloszenie = Zgloszenie.objects.create(
+			imie="Jan",
+			nazwisko="Kowalski",
+			email="jan@example.com",
+			telefon="123456789",
+			data_urodzenia=datetime.date(1990, 1, 1),
+			rejs=self.rejs,
+			rodo=True,
+			obecnosc="tak",
+		)
+		mail.outbox.clear()
 
-        Wplata.objects.create(
-            zgloszenie=zgloszenie, kwota=Decimal("500.00"), rodzaj="wplata"
-        )
+		Wplata.objects.create(zgloszenie=zgloszenie, kwota=Decimal("500.00"), rodzaj="wplata")
 
-        self.assertEqual(len(mail.outbox), 1)
-        self.assertIn("wpłatę", mail.outbox[0].subject)
+		self.assertEqual(len(mail.outbox), 1)
+		self.assertIn("wpłatę", mail.outbox[0].subject)
 
-    def test_email_sent_on_zwrot_create(self):
-        """Test wysyłania emaila przy tworzeniu zwrotu."""
-        zgloszenie = Zgloszenie.objects.create(
-            imie="Jan",
-            nazwisko="Kowalski",
-            email="jan@example.com",
-            telefon="123456789",
-            rejs=self.rejs,
-            rodo=True,
-            obecnosc="tak",
-        )
-        mail.outbox.clear()
+	def test_email_sent_on_zwrot_create(self):
+		"""Test wysyłania emaila przy tworzeniu zwrotu."""
+		zgloszenie = Zgloszenie.objects.create(
+			imie="Jan",
+			nazwisko="Kowalski",
+			email="jan@example.com",
+			telefon="123456789",
+			data_urodzenia=datetime.date(1990, 1, 1),
+			rejs=self.rejs,
+			rodo=True,
+			obecnosc="tak",
+		)
+		mail.outbox.clear()
 
-        Wplata.objects.create(
-            zgloszenie=zgloszenie, kwota=Decimal("100.00"), rodzaj="zwrot"
-        )
+		Wplata.objects.create(zgloszenie=zgloszenie, kwota=Decimal("100.00"), rodzaj="zwrot")
 
-        self.assertEqual(len(mail.outbox), 1)
-        self.assertIn("Zwrot", mail.outbox[0].subject)
+		self.assertEqual(len(mail.outbox), 1)
+		self.assertIn("Zwrot", mail.outbox[0].subject)
 
-    def test_email_sent_on_ogloszenie_create(self):
-        """Test wysyłania emaila przy tworzeniu ogłoszenia."""
-        zgloszenie1 = Zgloszenie.objects.create(
-            imie="Jan",
-            nazwisko="Kowalski",
-            email="jan@example.com",
-            telefon="123456789",
-            rejs=self.rejs,
-            rodo=True,
-            obecnosc="tak",
-        )
-        zgloszenie2 = Zgloszenie.objects.create(
-            imie="Anna",
-            nazwisko="Nowak",
-            email="anna@example.com",
-            telefon="987654321",
-            rejs=self.rejs,
-            rodo=True,
-            obecnosc="tak",
-        )
-        mail.outbox.clear()
+	def test_email_sent_on_ogloszenie_create(self):
+		"""Test wysyłania emaila przy tworzeniu ogłoszenia."""
+		zgloszenie1 = Zgloszenie.objects.create(
+			imie="Jan",
+			nazwisko="Kowalski",
+			email="jan@example.com",
+			telefon="123456789",
+			data_urodzenia=datetime.date(1990, 1, 1),
+			rejs=self.rejs,
+			rodo=True,
+			obecnosc="tak",
+		)
+		zgloszenie2 = Zgloszenie.objects.create(
+			imie="Anna",
+			nazwisko="Nowak",
+			email="anna@example.com",
+			telefon="987654321",
+			data_urodzenia=datetime.date(1991, 2, 2),
+			rejs=self.rejs,
+			rodo=True,
+			obecnosc="tak",
+		)
+		mail.outbox.clear()
 
-        Ogloszenie.objects.create(
-            rejs=self.rejs, tytul="Ważne ogłoszenie", text="Treść ogłoszenia"
-        )
+		Ogloszenie.objects.create(rejs=self.rejs, tytul="Ważne ogłoszenie", text="Treść ogłoszenia")
 
-        self.assertEqual(len(mail.outbox), 2)
-        recipients = [m.to[0] for m in mail.outbox]
-        self.assertIn("jan@example.com", recipients)
-        self.assertIn("anna@example.com", recipients)
+		self.assertEqual(len(mail.outbox), 2)
+		recipients = [m.to[0] for m in mail.outbox]
+		self.assertIn("jan@example.com", recipients)
+		self.assertIn("anna@example.com", recipients)
 
 
 class AdminTest(TestCase):
-    """Testy panelu administracyjnego."""
+	"""Testy panelu administracyjnego."""
 
-    def setUp(self):
-        self.client = Client()
-        self.admin_user = User.objects.create_superuser(
-            username="admin", email="admin@example.com", password="adminpass123"
-        )
-        self.client.login(username="admin", password="adminpass123")
-        self.rejs = Rejs.objects.create(
-            nazwa="Rejs testowy",
-            od="2025-07-01",
-            do="2025-07-14",
-            start="Gdynia",
-            koniec="Sztokholm",
-        )
+	def setUp(self):
+		self.client = Client()
+		self.admin_user = User.objects.create_superuser(
+			username="admin", email="admin@example.com", password="adminpass123"
+		)
+		self.client.login(username="admin", password="adminpass123")
+		self.rejs = Rejs.objects.create(
+			nazwa="Rejs testowy",
+			od=future_date(30),
+			do=future_date(44),
+			start="Gdynia",
+			koniec="Sztokholm",
+		)
 
-    def test_rejs_admin_accessible(self):
-        """Test dostępności admina rejsów."""
-        response = self.client.get("/admin/rejs/rejs/")
-        self.assertEqual(response.status_code, 200)
+	def test_rejs_admin_accessible(self):
+		"""Test dostępności admina rejsów."""
+		response = self.client.get("/admin/rejs/rejs/")
+		self.assertEqual(response.status_code, 200)
 
-    def test_rejs_admin_add(self):
-        """Test dodawania rejsu przez admin."""
-        response = self.client.get("/admin/rejs/rejs/add/")
-        self.assertEqual(response.status_code, 200)
+	def test_rejs_admin_add(self):
+		"""Test dodawania rejsu przez admin."""
+		response = self.client.get("/admin/rejs/rejs/add/")
+		self.assertEqual(response.status_code, 200)
 
-    def test_zgloszenie_admin_accessible(self):
-        """Test dostępności admina zgłoszeń."""
-        response = self.client.get("/admin/rejs/zgloszenie/")
-        self.assertEqual(response.status_code, 200)
+	def test_zgloszenie_admin_accessible(self):
+		"""Test dostępności admina zgłoszeń."""
+		response = self.client.get("/admin/rejs/zgloszenie/")
+		self.assertEqual(response.status_code, 200)
 
-    def test_zgloszenie_admin_change(self):
-        """Test edycji zgłoszenia przez admin."""
-        zgloszenie = Zgloszenie.objects.create(
-            imie="Jan",
-            nazwisko="Kowalski",
-            email="jan@example.com",
-            telefon="123456789",
-            rejs=self.rejs,
-            rodo=True,
-            obecnosc="tak",
-        )
-        response = self.client.get(f"/admin/rejs/zgloszenie/{zgloszenie.id}/change/")
-        self.assertEqual(response.status_code, 200)
+	def test_zgloszenie_admin_change(self):
+		"""Test edycji zgłoszenia przez admin."""
+		zgloszenie = Zgloszenie.objects.create(
+			imie="Jan",
+			nazwisko="Kowalski",
+			email="jan@example.com",
+			telefon="123456789",
+			data_urodzenia=datetime.date(1990, 1, 1),
+			rejs=self.rejs,
+			rodo=True,
+			obecnosc="tak",
+		)
+		response = self.client.get(f"/admin/rejs/zgloszenie/{zgloszenie.id}/change/")
+		self.assertEqual(response.status_code, 200)
 
-    def test_rejs_admin_has_inlines(self):
-        """Test czy admin rejsu ma inline'y."""
-        site = AdminSite()
-        admin = RejsyAdmin(Rejs, site)
-        self.assertEqual(len(admin.inlines), 3)
+	def test_rejs_admin_has_inlines(self):
+		"""Test czy admin rejsu ma inline'y."""
+		site = AdminSite()
+		admin = RejsyAdmin(Rejs, site)
+		self.assertEqual(len(admin.inlines), 3)
 
-    def test_zgloszenie_admin_has_readonly_fields(self):
-        """Test czy admin zgłoszenia ma pola tylko do odczytu."""
-        site = AdminSite()
-        admin = ZgloszenieAdmin(Zgloszenie, site)
-        self.assertIn("rejs_cena", admin.readonly_fields)
-        self.assertIn("do_zaplaty", admin.readonly_fields)
-        self.assertIn("suma_wplat", admin.readonly_fields)
+	def test_zgloszenie_admin_has_readonly_fields(self):
+		"""Test czy admin zgłoszenia ma pola tylko do odczytu."""
+		site = AdminSite()
+		admin = ZgloszenieAdmin(Zgloszenie, site)
+		self.assertIn("rejs_cena", admin.readonly_fields)
+		self.assertIn("do_zaplaty", admin.readonly_fields)
+		self.assertIn("suma_wplat", admin.readonly_fields)
