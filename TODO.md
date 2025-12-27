@@ -1,120 +1,20 @@
-# TODO - Zadania do realizacji w przyszlosci
+# TODO
 
-## Zadania opcjonalne (RODO / Bezpieczenstwo)
+## Bezpieczenstwo / RODO
 
-### 1. Endpoint do realizacji prawa do usuniecia danych (Art. 17 RODO)
+Szczegoly w [RODO.md](RODO.md)
 
-**Priorytet:** Niski (obecnie mozna realizowac recznie przez panel admina)
+- [ ] Endpoint do usuniecia danych (Art. 17 RODO)
+- [ ] Migracja SQLite -> PostgreSQL
+- [ ] Rotacja klucza szyfrowania
+- [ ] Dwuskladnikowe uwierzytelnianie (2FA)
 
-**Dlaczego warto dodac:**
+## Funkcjonalnosc
 
-- Art. 17 RODO gwarantuje osobom prawo do zadania usuniecia ich danych osobowych
-- Obecnie administrator musi recznie usuwac dane na zadanie uzytkownika
-- Automatyczny endpoint pozwolilby uzytkownikom samodzielnie usunac swoje dane
-- Zmniejsza obciazenie administracyjne i ryzyko bledu ludzkiego
+- [ ] Formularz zgody na przetwarzanie danych wrazliwych (PESEL)
+- [ ] Pola pokazuja "unknown" zamiast pustego (adres, kod_pocztowy, miejscowosc, data_urodzenia)
+- [ ] Przeniesienie elementow z motywu Bootstrap do glownego
 
-**Proponowana implementacja:**
+## Refaktoryzacja
 
-- Endpoint `/zgloszenie/<token>/usun/` dostepny dla uzytkownika
-- Potwierdzenie emailem przed usunieciem
-- Logowanie operacji usuniecia dla celow audytowych
-- Usuniecie danych wrazliwych (Dane_Dodatkowe) z zachowaniem anonimizowanego
-  rekordu zgloszenia dla celow statystycznych
-
----
-
-### 2. Migracja bazy danych SQLite -> PostgreSQL z szyfrowaniem
-
-**Priorytet:** Niski (SQLite wystarczajacy dla malej skali)
-
-**Dlaczego warto rozwazyc:**
-
-- SQLite nie wspiera szyfrowania na poziomie bazy danych
-- PostgreSQL oferuje Transparent Data Encryption (TDE) i lepsze zarzadzanie
-  uprawnieniami
-- Lepsza skalowalnosc przy wzroscie liczby uzytkownikow
-- Mozliwosc replikacji i backupow przyrostowych
-- Wymagane przy wdrozeniu na wieksza skale lub w srodowisku produkcyjnym
-  z wieloma uzytkownikami
-
-**Kiedy wdrozyc:**
-
-- Gdy liczba zgloszen przekroczy ~1000 rocznie
-- Przy wdrozeniu na serwer produkcyjny z wieloma administratorami
-- Gdy wymagana bedzie wysoka dostepnosc (HA)
-
-**Uwagi:**
-
-- Wymaga zmiany infrastruktury hostingowej
-- Konieczna migracja istniejacych danych
-- Dodatkowe koszty utrzymania serwera bazy danych
-
----
-
-### 3. Rotacja klucza szyfrowania (Key Rotation)
-
-**Priorytet:** Sredni (wazne dla dlugoterminowego bezpieczenstwa)
-
-**Dlaczego warto dodac:**
-
-- Obecny klucz Fernet jest statyczny - kompromitacja = dostep do wszystkich
-  danych
-- Regularna rotacja kluczy minimalizuje ryzyko wycieku
-- Zgodnosc z najlepszymi praktykami bezpieczenstwa (NIST, ISO 27001)
-
-**Proponowana implementacja:**
-
-- Wsparcie dla wielu kluczy (aktywny + poprzednie do odczytu)
-- Komenda Django do re-szyfrowania danych nowym kluczem
-- Automatyczne usuwanie starych kluczy po re-szyfrowaniu
-
----
-
-### 4. Dwuskladnikowe uwierzytelnianie (2FA) dla administratorow
-
-**Priorytet:** Sredni
-
-**Dlaczego warto dodac:**
-
-- Administratorzy maja dostep do danych wrazliwych (PESEL, dokumenty)
-- Samo haslo nie jest wystarczajacym zabezpieczeniem
-- 2FA znaczaco zmniejsza ryzyko nieautoryzowanego dostepu
-
-**Proponowana implementacja:**
-
-- Biblioteka `django-otp` lub `django-two-factor-auth`
-- TOTP (aplikacje typu Google Authenticator)
-- Wymagane dla wszystkich uzytkownikow z dostepem do panelu admina
-
----
-
-## Uwagi
-
-- Zadania oznaczone jako "Niski priorytet" moga byc realizowane w miare
-  dostepnosci zasobow
-- Przed wdrozeniem zadan zwiazanych z RODO zalecana konsultacja z prawnikiem
-- Dane kontaktowe administratora danych w klauzuli RODO wymagaja uzupelnienia
-  (plik: `rejs/templates/rejs/rodo_info.html`)
-
----
-
-## Zrealizowane zadania (grudzien 2025)
-
-- [x] Maskowanie danych w panelu admina
-- [x] Zgoda na przetwarzanie danych wrazliwych
-- [x] Wymuszenie HTTPS w produkcji
-- [x] Walidacja PESEL (suma kontrolna)
-- [x] Logowanie dostepu do danych wrazliwych (AuditLog)
-- [x] Automatyczne usuwanie danych po 30 dniach (`usun_dane_wrazliwe`)
-- [x] Strona z klauzula informacyjna RODO (`/rodo/`)
-
-## Dodatkowe zadania (główne)
-
-- [] Naprawa testów jednostkowych - wysypuje się większość
-- [] Nie widać zmian związanych z adresem
-- [] Zgoda na przetwarzanie danych osobowych - hmmm... gdzie opcja do dodania PESEL'u?
-- [] Gdzie alternatywny wygląd strony?
-- [] reset hasła dla admina (może jako poe?)
-- [] refactor strony - na zasadzie MVC - nie wiem czy Django to obsługuje/wspiera
-- [] pokazuje się warning przy uruchamianiu strony/serwera - zbadać
-- [] show admin page from cli
+- [ ] Refaktoryzacja kodu zgodnie z wzorcem MTV (Model-Template-View)

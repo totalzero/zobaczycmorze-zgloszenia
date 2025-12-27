@@ -1,0 +1,562 @@
+[
+    {
+        "model": "auth.user",
+        "pk": 2,
+        "fields": {
+            "username": "koordynator",
+            "password": "pbkdf2_sha256$870000$test$XqMHHvJxKxKxKxKxKxKxKxKxKxKxKxKxKxKxKxKxKxK=",
+            "is_staff": true,
+            "is_superuser": false,
+            "is_active": true,
+            "first_name": "Maria",
+            "last_name": "Kowalska",
+            "email": "koordynator@example.com"
+        }
+    },
+    {
+        "model": "rejs.rejs",
+        "pk": 1,
+        "fields": {
+            "nazwa": "Rejs Bałtycki 2025",
+            "od": "2025-07-01",
+            "do": "2025-07-14",
+            "start": "Gdynia",
+            "koniec": "Sztokholm",
+            "cena": "3500.00",
+            "zaliczka": "500.00",
+            "opis": "Dwutygodniowy rejs po Bałtyku. Odwiedzimy malownicze porty Szwecji i poznamy uroki żeglarstwa morskiego. Rejs przeznaczony dla osób niewidomych i słabowidzących oraz ich przewodników."
+        }
+    },
+    {
+        "model": "rejs.rejs",
+        "pk": 2,
+        "fields": {
+            "nazwa": "Rejs Fiński 2025",
+            "od": "2025-07-20",
+            "do": "2025-08-02",
+            "start": "Gdynia",
+            "koniec": "Helsinki",
+            "cena": "4000.00",
+            "zaliczka": "600.00",
+            "opis": "Rejs do stolicy Finlandii z postojami w portach Estonii. Niezapomniane widoki archipelagu fińskiego i białe noce północy."
+        }
+    },
+    {
+        "model": "rejs.rejs",
+        "pk": 3,
+        "fields": {
+            "nazwa": "Rejs Norweski 2025",
+            "od": "2025-08-10",
+            "do": "2025-08-24",
+            "start": "Gdańsk",
+            "koniec": "Bergen",
+            "cena": "5500.00",
+            "zaliczka": "800.00",
+            "opis": "Wyprawa do krainy fiordów. Dwutygodniowa przygoda wzdłuż norweskiego wybrzeża z wizytą w Bergen - bramie do fiordów."
+        }
+    },
+    {
+        "model": "rejs.rejs",
+        "pk": 4,
+        "fields": {
+            "nazwa": "Rejs Duński 2025",
+            "od": "2025-09-01",
+            "do": "2025-09-10",
+            "start": "Świnoujście",
+            "koniec": "Kopenhaga",
+            "cena": "2800.00",
+            "zaliczka": "400.00",
+            "opis": "Krótszy rejs do duńskiej stolicy. Idealny dla osób, które chcą spróbować żeglarstwa morskiego bez długiego zobowiązania czasowego."
+        }
+    },
+    {
+        "model": "rejs.rejs",
+        "pk": 5,
+        "fields": {
+            "nazwa": "Rejs Jesienny 2025",
+            "od": "2025-10-01",
+            "do": "2025-10-14",
+            "start": "Gdynia",
+            "koniec": "Tallinn",
+            "cena": "3200.00",
+            "zaliczka": "500.00",
+            "opis": "Jesienny rejs do Estonii. Złota polska jesień na morzu i wizyta w średniowiecznym Tallinnie."
+        }
+    },
+    {
+        "model": "rejs.wachta",
+        "pk": 1,
+        "fields": {
+            "rejs": 1,
+            "nazwa": "Alfa"
+        }
+    },
+    {
+        "model": "rejs.wachta",
+        "pk": 2,
+        "fields": {
+            "rejs": 1,
+            "nazwa": "Beta"
+        }
+    },
+    {
+        "model": "rejs.wachta",
+        "pk": 3,
+        "fields": {
+            "rejs": 1,
+            "nazwa": "Gamma"
+        }
+    },
+    {
+        "model": "rejs.wachta",
+        "pk": 4,
+        "fields": {
+            "rejs": 2,
+            "nazwa": "Alfa"
+        }
+    },
+    {
+        "model": "rejs.wachta",
+        "pk": 5,
+        "fields": {
+            "rejs": 2,
+            "nazwa": "Beta"
+        }
+    },
+    {
+        "model": "rejs.zgloszenie",
+        "pk": 1,
+        "fields": {
+            "imie": "Jan",
+            "nazwisko": "Kowalski",
+            "email": "jan.kowalski@example.com",
+            "telefon": "501234567",
+            "data_urodzenia": "1985-03-15",
+            "adres": "ul. Morska 12/5",
+            "kod_pocztowy": "81-350",
+            "miejscowosc": "Gdynia",
+            "obecnosc": "tak",
+            "rodo": true,
+            "status": "Zakwalifikowany",
+            "wzrok": "NIEWIDOMY",
+            "rola": "ZALOGANT",
+            "rejs": 1,
+            "wachta": 1,
+            "token": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+            "data_zgloszenia": "2025-01-15T10:30:00Z"
+        }
+    },
+    {
+        "model": "rejs.zgloszenie",
+        "pk": 2,
+        "fields": {
+            "imie": "Anna",
+            "nazwisko": "Nowak",
+            "email": "anna.nowak@example.com",
+            "telefon": "502345678",
+            "data_urodzenia": "1990-07-22",
+            "adres": "ul. Słoneczna 5",
+            "kod_pocztowy": "80-001",
+            "miejscowosc": "Gdańsk",
+            "obecnosc": "nie",
+            "rodo": true,
+            "status": "Zakwalifikowany",
+            "wzrok": "SLABO-WIDZACY",
+            "rola": "ZALOGANT",
+            "rejs": 1,
+            "wachta": 1,
+            "token": "b2c3d4e5-f6a7-8901-bcde-f23456789012",
+            "data_zgloszenia": "2025-01-16T14:20:00Z"
+        }
+    },
+    {
+        "model": "rejs.zgloszenie",
+        "pk": 3,
+        "fields": {
+            "imie": "Piotr",
+            "nazwisko": "Wiśniewski",
+            "email": "piotr.wisniewski@example.com",
+            "telefon": "503456789",
+            "data_urodzenia": "1978-11-30",
+            "adres": "ul. Leśna 8",
+            "kod_pocztowy": "81-100",
+            "miejscowosc": "Gdynia",
+            "obecnosc": "tak",
+            "rodo": true,
+            "status": "Niezakwalifikowany",
+            "wzrok": "NIEWIDOMY",
+            "rola": "ZALOGANT",
+            "rejs": 1,
+            "wachta": null,
+            "token": "c3d4e5f6-a7b8-9012-cdef-345678901234",
+            "data_zgloszenia": "2025-01-17T09:15:00Z"
+        }
+    },
+    {
+        "model": "rejs.zgloszenie",
+        "pk": 4,
+        "fields": {
+            "imie": "Maria",
+            "nazwisko": "Wójcik",
+            "email": "maria.wojcik@example.com",
+            "telefon": "504567890",
+            "data_urodzenia": "1995-02-14",
+            "adres": "ul. Kwiatowa 3/10",
+            "kod_pocztowy": "00-001",
+            "miejscowosc": "Warszawa",
+            "obecnosc": "nie",
+            "rodo": true,
+            "status": "Zakwalifikowany",
+            "wzrok": "WIDZI",
+            "rola": "OFICER-WACHTY",
+            "rejs": 2,
+            "wachta": 4,
+            "token": "d4e5f6a7-b8c9-0123-defa-456789012345",
+            "data_zgloszenia": "2025-01-18T11:45:00Z"
+        }
+    },
+    {
+        "model": "rejs.zgloszenie",
+        "pk": 5,
+        "fields": {
+            "imie": "Tomasz",
+            "nazwisko": "Kamiński",
+            "email": "tomasz.kaminski@example.com",
+            "telefon": "505678901",
+            "data_urodzenia": "1982-06-08",
+            "adres": "ul. Parkowa 15",
+            "kod_pocztowy": "30-001",
+            "miejscowosc": "Kraków",
+            "obecnosc": "tak",
+            "rodo": true,
+            "status": "Odrzucone",
+            "wzrok": "NIEWIDOMY",
+            "rola": "ZALOGANT",
+            "rejs": 2,
+            "wachta": null,
+            "token": "e5f6a7b8-c9d0-1234-efab-567890123456",
+            "data_zgloszenia": "2025-01-19T16:00:00Z"
+        }
+    },
+    {
+        "model": "rejs.zgloszenie",
+        "pk": 6,
+        "fields": {
+            "imie": "Katarzyna",
+            "nazwisko": "Lewandowska",
+            "email": "katarzyna.lewandowska@example.com",
+            "telefon": "506789012",
+            "data_urodzenia": "1988-09-25",
+            "adres": "ul. Główna 22",
+            "kod_pocztowy": "50-001",
+            "miejscowosc": "Wrocław",
+            "obecnosc": "nie",
+            "rodo": true,
+            "status": "Niezakwalifikowany",
+            "wzrok": "SLABO-WIDZACY",
+            "rola": "ZALOGANT",
+            "rejs": 3,
+            "wachta": null,
+            "token": "f6a7b8c9-d0e1-2345-fabc-678901234567",
+            "data_zgloszenia": "2025-01-20T08:30:00Z"
+        }
+    },
+    {
+        "model": "rejs.zgloszenie",
+        "pk": 7,
+        "fields": {
+            "imie": "Michał",
+            "nazwisko": "Zieliński",
+            "email": "michal.zielinski@example.com",
+            "telefon": "507890123",
+            "data_urodzenia": "1992-12-03",
+            "adres": "ul. Nadmorska 7",
+            "kod_pocztowy": "76-200",
+            "miejscowosc": "Słupsk",
+            "obecnosc": "tak",
+            "rodo": true,
+            "status": "Zakwalifikowany",
+            "wzrok": "NIEWIDOMY",
+            "rola": "ZALOGANT",
+            "rejs": 3,
+            "wachta": null,
+            "token": "a7b8c9d0-e1f2-3456-abcd-789012345678",
+            "data_zgloszenia": "2025-01-21T13:00:00Z"
+        }
+    },
+    {
+        "model": "rejs.zgloszenie",
+        "pk": 8,
+        "fields": {
+            "imie": "Agnieszka",
+            "nazwisko": "Szymańska",
+            "email": "agnieszka.szymanska@example.com",
+            "telefon": "508901234",
+            "data_urodzenia": "1975-04-18",
+            "adres": "ul. Portowa 1",
+            "kod_pocztowy": "70-001",
+            "miejscowosc": "Szczecin",
+            "obecnosc": "tak",
+            "rodo": true,
+            "status": "Zakwalifikowany",
+            "wzrok": "WIDZI",
+            "rola": "OFICER-WACHTY",
+            "rejs": 1,
+            "wachta": 2,
+            "token": "b8c9d0e1-f2a3-4567-bcde-890123456789",
+            "data_zgloszenia": "2025-01-22T10:00:00Z"
+        }
+    },
+    {
+        "model": "rejs.zgloszenie",
+        "pk": 9,
+        "fields": {
+            "imie": "Robert",
+            "nazwisko": "Dąbrowski",
+            "email": "robert.dabrowski@example.com",
+            "telefon": "509012345",
+            "data_urodzenia": "1980-08-12",
+            "adres": "ul. Żeglarska 9",
+            "kod_pocztowy": "81-300",
+            "miejscowosc": "Gdynia",
+            "obecnosc": "tak",
+            "rodo": true,
+            "status": "Niezakwalifikowany",
+            "wzrok": "NIEWIDOMY",
+            "rola": "ZALOGANT",
+            "rejs": 4,
+            "wachta": null,
+            "token": "c9d0e1f2-a3b4-5678-cdef-901234567890",
+            "data_zgloszenia": "2025-01-23T15:30:00Z"
+        }
+    },
+    {
+        "model": "rejs.zgloszenie",
+        "pk": 10,
+        "fields": {
+            "imie": "Ewa",
+            "nazwisko": "Mazur",
+            "email": "ewa.mazur@example.com",
+            "telefon": "510123456",
+            "data_urodzenia": "1998-01-28",
+            "adres": "ul. Bałtycka 14",
+            "kod_pocztowy": "84-100",
+            "miejscowosc": "Puck",
+            "obecnosc": "nie",
+            "rodo": true,
+            "status": "Zakwalifikowany",
+            "wzrok": "SLABO-WIDZACY",
+            "rola": "ZALOGANT",
+            "rejs": 5,
+            "wachta": null,
+            "token": "d0e1f2a3-b4c5-6789-defa-012345678901",
+            "data_zgloszenia": "2025-01-24T12:00:00Z"
+        }
+    },
+    {
+        "model": "rejs.zgloszenie",
+        "pk": 11,
+        "fields": {
+            "imie": "Krzysztof",
+            "nazwisko": "Jankowski",
+            "email": "krzysztof.jankowski@example.com",
+            "telefon": "511234567",
+            "data_urodzenia": "1970-05-05",
+            "adres": "ul. Kapitańska 2",
+            "kod_pocztowy": "81-400",
+            "miejscowosc": "Gdynia",
+            "obecnosc": "tak",
+            "rodo": true,
+            "status": "Zakwalifikowany",
+            "wzrok": "WIDZI",
+            "rola": "OFICER-WACHTY",
+            "rejs": 1,
+            "wachta": 3,
+            "token": "e1f2a3b4-c5d6-7890-efab-123456789012",
+            "data_zgloszenia": "2025-01-25T09:00:00Z"
+        }
+    },
+    {
+        "model": "rejs.zgloszenie",
+        "pk": 12,
+        "fields": {
+            "imie": "Magdalena",
+            "nazwisko": "Krawczyk",
+            "email": "magdalena.krawczyk@example.com",
+            "telefon": "512345678",
+            "data_urodzenia": "1993-10-17",
+            "adres": "ul. Marynarska 6",
+            "kod_pocztowy": "81-200",
+            "miejscowosc": "Gdynia",
+            "obecnosc": "nie",
+            "rodo": true,
+            "status": "Niezakwalifikowany",
+            "wzrok": "NIEWIDOMY",
+            "rola": "ZALOGANT",
+            "rejs": 2,
+            "wachta": null,
+            "token": "f2a3b4c5-d6e7-8901-fabc-234567890123",
+            "data_zgloszenia": "2025-01-26T14:00:00Z"
+        }
+    },
+    {
+        "model": "rejs.wplata",
+        "pk": 1,
+        "fields": {
+            "kwota": "500.00",
+            "data": "2025-01-20T10:00:00Z",
+            "rodzaj": "wplata",
+            "zgloszenie": 1
+        }
+    },
+    {
+        "model": "rejs.wplata",
+        "pk": 2,
+        "fields": {
+            "kwota": "3000.00",
+            "data": "2025-02-15T14:30:00Z",
+            "rodzaj": "wplata",
+            "zgloszenie": 1
+        }
+    },
+    {
+        "model": "rejs.wplata",
+        "pk": 3,
+        "fields": {
+            "kwota": "500.00",
+            "data": "2025-01-22T09:15:00Z",
+            "rodzaj": "wplata",
+            "zgloszenie": 2
+        }
+    },
+    {
+        "model": "rejs.wplata",
+        "pk": 4,
+        "fields": {
+            "kwota": "4000.00",
+            "data": "2025-01-25T11:00:00Z",
+            "rodzaj": "wplata",
+            "zgloszenie": 4
+        }
+    },
+    {
+        "model": "rejs.wplata",
+        "pk": 5,
+        "fields": {
+            "kwota": "1000.00",
+            "data": "2025-01-28T16:45:00Z",
+            "rodzaj": "wplata",
+            "zgloszenie": 7
+        }
+    },
+    {
+        "model": "rejs.wplata",
+        "pk": 6,
+        "fields": {
+            "kwota": "500.00",
+            "data": "2025-01-30T08:00:00Z",
+            "rodzaj": "wplata",
+            "zgloszenie": 8
+        }
+    },
+    {
+        "model": "rejs.wplata",
+        "pk": 7,
+        "fields": {
+            "kwota": "3000.00",
+            "data": "2025-02-20T12:00:00Z",
+            "rodzaj": "wplata",
+            "zgloszenie": 8
+        }
+    },
+    {
+        "model": "rejs.wplata",
+        "pk": 8,
+        "fields": {
+            "kwota": "500.00",
+            "data": "2025-02-01T10:30:00Z",
+            "rodzaj": "wplata",
+            "zgloszenie": 11
+        }
+    },
+    {
+        "model": "rejs.wplata",
+        "pk": 9,
+        "fields": {
+            "kwota": "2500.00",
+            "data": "2025-02-25T15:00:00Z",
+            "rodzaj": "wplata",
+            "zgloszenie": 11
+        }
+    },
+    {
+        "model": "rejs.wplata",
+        "pk": 10,
+        "fields": {
+            "kwota": "500.00",
+            "data": "2025-03-10T09:00:00Z",
+            "rodzaj": "wplata",
+            "zgloszenie": 11
+        }
+    },
+    {
+        "model": "rejs.wplata",
+        "pk": 11,
+        "fields": {
+            "kwota": "500.00",
+            "data": "2025-02-05T13:00:00Z",
+            "rodzaj": "wplata",
+            "zgloszenie": 10
+        }
+    },
+    {
+        "model": "rejs.wplata",
+        "pk": 12,
+        "fields": {
+            "kwota": "100.00",
+            "data": "2025-03-01T11:00:00Z",
+            "rodzaj": "zwrot",
+            "zgloszenie": 2
+        }
+    },
+    {
+        "model": "rejs.ogloszenie",
+        "pk": 1,
+        "fields": {
+            "rejs": 1,
+            "data": "2025-06-01T10:00:00Z",
+            "tytul": "Informacja o zaokrętowaniu",
+            "text": "Zaokrętowanie odbędzie się 1 lipca 2025 o godzinie 10:00 w porcie Gdynia. Prosimy o punktualne przybycie z dokumentem tożsamości."
+        }
+    },
+    {
+        "model": "rejs.ogloszenie",
+        "pk": 2,
+        "fields": {
+            "rejs": 1,
+            "data": "2025-06-15T14:00:00Z",
+            "tytul": "Lista rzeczy do zabrania",
+            "text": "Prosimy o zabranie: ciepłej kurtki, nieprzemakalnego ubrania, wygodnego obuwia z antypoślizgową podeszwą, leków (jeśli są potrzebne), okularów przeciwsłonecznych."
+        }
+    },
+    {
+        "model": "rejs.ogloszenie",
+        "pk": 3,
+        "fields": {
+            "rejs": 2,
+            "data": "2025-07-01T09:00:00Z",
+            "tytul": "Zmiana godziny zbiórki",
+            "text": "Informujemy, że zbiórka przed rejsem została przesunięta na godzinę 9:00. Przepraszamy za utrudnienia."
+        }
+    },
+    {
+        "model": "rejs.ogloszenie",
+        "pk": 4,
+        "fields": {
+            "rejs": 3,
+            "data": "2025-07-15T11:00:00Z",
+            "tytul": "Wymagane dokumenty",
+            "text": "Przypominamy, że na rejs do Norwegii wymagany jest ważny paszport lub dowód osobisty. Prosimy o sprawdzenie ważności dokumentów przed rejsem."
+        }
+    }
+]
