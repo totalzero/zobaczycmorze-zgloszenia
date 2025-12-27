@@ -1,0 +1,78 @@
+{% extends "rejs/base.html" %}
+
+{% block title %}Lista Rejsów - Zobaczyć Morze{% endblock %}
+
+{% block nav %}{% endblock %}
+
+{% block content %}
+<h1 class="mb-4 text-center">Dostępne rejsy</h1>
+
+{% if rejsy %}
+<div class="row g-4">
+    {% for rejs in rejsy %}
+    <div class="col-12">
+        <article class="card shadow border-0 h-100"
+                 aria-labelledby="cruise-{{ rejs.id }}">
+
+            <!-- HEADER -->
+            <div class="card-header bg-primary text-white">
+                <h2 id="cruise-{{ rejs.id }}" class="h4 mb-1">
+                    {{ rejs.nazwa }}
+                </h2>
+                <small>
+                    <time datetime="{{ rejs.od|date:'Y-m-d' }}">
+                        {{ rejs.od|date:'j E Y' }}
+                    </time>
+                    –
+                    <time datetime="{{ rejs.do|date:'Y-m-d' }}">
+                        {{ rejs.do|date:'j E Y' }}
+                    </time>
+                </small>
+            </div>
+
+            <!-- BODY -->
+            <div class="card-body">
+
+    <dl class="row mb-3">
+        <dt class="col-sm-3">
+            <i class="bi bi-geo-alt me-1"></i> Trasa:
+        </dt>
+        <dd class="col-sm-9">{{ rejs.start }} → {{ rejs.koniec }}</dd>
+
+        <dt class="col-sm-3">
+            <i class="bi bi-cash-stack me-1"></i> Zaliczka:
+        </dt>
+        <dd class="col-sm-9">{{ rejs.zaliczka }} zł</dd>
+
+        <dt class="col-sm-3">
+            <i class="bi bi-wallet-fill me-1"></i> Pełna cena:
+        </dt>
+        <dd class="col-sm-9">{{ rejs.cena }} zł</dd>
+    </dl>
+
+    {% if rejs.opis %}
+<div class="alert alert-primary mb-0">
+    <h6 class="mb-2">
+        <i class="bi bi-info-circle me-1"></i> Opis rejsu
+    </h6>
+    <p class="mb-0">{{ rejs.opis }}</p>
+</div>
+{% endif %}
+        <!-- FOOTER -->
+            <div class="card-footer bg-white text-end">
+                <a href="{% url 'zgloszenie_utworz' rejs.id %}"
+                   class="btn btn-primary"
+                   aria-label="Zapisz się na rejs {{ rejs.nazwa }}">
+                    Zapisz się na ten rejs
+                </a>
+            </div>
+        </article>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<p class="alert alert-info">
+    Obecnie nie ma dostępnych rejsów. Sprawdź ponownie później.
+</p>
+{% endif %}
+{% endblock %}

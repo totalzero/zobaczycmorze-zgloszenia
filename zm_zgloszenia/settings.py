@@ -88,10 +88,13 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "zm_zgloszenia.urls"
 
+# Theme configuration (set DJANGO_THEME=alt for Bootstrap theme)
+DJANGO_THEME = os.environ.get("DJANGO_THEME", "")
+
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR / "themes" / DJANGO_THEME] if DJANGO_THEME else [],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [

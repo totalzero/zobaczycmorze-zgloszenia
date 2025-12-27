@@ -46,3 +46,4 @@ init = ["migrate", "createsuperuser"]
 resetadmin = "uv run --env-file .env python manage.py resetadmin"
 open = "uv run --env-file .env python manage.py openpage"
 openadmin = "uv run --env-file .env python manage.py openpage --admin"
+openalt = { cmd = "uv run --env-file .env python manage.py openpage", env = { DJANGO_THEME = "alt" } }
