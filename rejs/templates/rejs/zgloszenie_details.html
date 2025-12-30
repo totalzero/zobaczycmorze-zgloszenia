@@ -37,6 +37,22 @@
             <dd>{{ zgloszenie.telefon }}</dd>
         </div>
         <div class="detail-row">
+            <dt>Data urodzenia:</dt>
+            <dd>{{ zgloszenie.data_urodzenia|date:"d.m.Y" }}</dd>
+        </div>
+        <div class="detail-row">
+            <dt>Adres:</dt>
+            <dd>{{ zgloszenie.adres }}</dd>
+        </div>
+        <div class="detail-row">
+            <dt>Kod pocztowy:</dt>
+            <dd>{{ zgloszenie.kod_pocztowy }}</dd>
+        </div>
+        <div class="detail-row">
+            <dt>Miejscowość:</dt>
+            <dd>{{ zgloszenie.miejscowosc }}</dd>
+        </div>        
+        <div class="detail-row">
             <dt>Status wzroku:</dt>
             <dd>{{ zgloszenie.get_wzrok_display }}</dd>
         </div>
@@ -82,6 +98,26 @@
         </div>
     </dl>
 </section>
+{% if zgloszenie.wachta %}
+<section class="content-section" aria-labelledby="section-watch">
+    <h2 id="section-watch">Wachta: {{ zgloszenie.wachta.nazwa }}</h2>
+
+    <dl class="details-list">
+        {% for czlonek in zgloszenie.wachta.czlonkowie.all %}
+            {% if czlonek.id != zgloszenie.id %}
+            <div class="detail-row">
+                <dt>{{ czlonek.imie }} {{ czlonek.nazwisko }}:</dt>
+                <dd>{{ czlonek.get_rola_display }}</dd>
+            </div>
+            {% endif %}
+        {% endfor %}
+    </dl>
+
+    {% if zgloszenie.wachta.czlonkowie.count <= 1 %}
+        <p class="no-results">Brak innych członków wachty.</p>
+    {% endif %}
+</section>
+{% endif %}
 
 <!-- Sekcja: Informacje o rejsie -->
 <section class="content-section" aria-labelledby="section-cruise">
