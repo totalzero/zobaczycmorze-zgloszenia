@@ -292,3 +292,25 @@ class AuditLogAdminPermissionsTest(TestCase):
 		request.user = self.regular_user
 
 		self.assertFalse(admin.has_delete_permission(request))
+
+
+class WachtaFormTest(TestCase):
+	"""Testy formularza WachtaForm w adminie."""
+
+	def setUp(self):
+		self.rejs = Rejs.objects.create(
+			nazwa="Rejs testowy",
+			od=future_date(30),
+			do=future_date(44),
+			start="Gdynia",
+			koniec="Sztokholm",
+		)
+
+	def test_invalid_rejs_id_handled_gracefully(self):
+		"""Test że nieprawidłowy rejs_id nie powoduje błędu ValueError."""
+		from rejs.admin import WachtaForm
+
+		# Symulacja formularza z nieprawidłowym rejs_id (nienumeryczny string)
+		form = WachtaForm(data={"rejs": "invalid_id", "nazwa": "Test"})
+		# Nie powinno rzucić wyjątku, queryset powinien być pusty
+		self.assertEqual(form.fields["czlonkowie"].queryset.count(), 0)

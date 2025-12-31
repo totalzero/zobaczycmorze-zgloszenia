@@ -286,3 +286,31 @@ class RaportRejsuBuilderTest(TestCase):
 
 		self.assertIsNotNone(result)
 		self.assertEqual(len(result), 0)
+
+	def test_build_zaloga_query_count(self):
+		"""Test że build_zaloga nie powoduje N+1 zapytań."""
+		from django.db import connection
+		from django.test.utils import CaptureQueriesContext
+
+		# Tworzymy 5 zgłoszeń z wpłatami
+		for i in range(5):
+			z = Zgloszenie.objects.create(
+				imie=f"Test{i}",
+				nazwisko=f"User{i}",
+				email=f"test{i}@example.com",
+				telefon=f"12345678{i}",
+				data_urodzenia=datetime.date(1990, 1, 1),
+				rejs=self.rejs,
+				rodo=True,
+				obecnosc="tak",
+			)
+			Wplata.objects.create(zgloszenie=z, kwota=Decimal("100.00"), rodzaj="wplata")
+			Wplata.objects.create(zgloszenie=z, kwota=Decimal("50.00"), rodzaj="zwrot")
+
+		# Powinno używać stałej liczby zapytań niezależnie od liczby wierszy
+		# Z bugiem N+1: byłoby 1 + 5*2 = 11+ zapytań
+		# Po naprawie: powinno być ~2-3 zapytania
+		with CaptureQueriesContext(connection) as context:
+			self.builder.build_zaloga()
+
+		self.assertLess(len(context), 6, f"Za dużo zapytań: {len(context)}")

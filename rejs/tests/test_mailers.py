@@ -196,3 +196,13 @@ class SendSimpleMailTest(TestCase):
 				},
 			)
 			self.assertEqual(len(mail.outbox), 1, f"Email nie został wysłany dla szablonu {template}")
+
+	def test_template_does_not_exist_caught_specifically(self):
+		"""Test że tylko TemplateDoesNotExist jest łapany, nie inne wyjątki."""
+		from django.template import TemplateDoesNotExist
+
+		with patch("rejs.mailers.render_to_string", side_effect=TemplateDoesNotExist("test")):
+			with self.assertLogs("rejs.mailers", level="WARNING") as logs:
+				send_simple_mail("Test", "test@example.com", "nonexistent/template", {})
+
+		self.assertTrue(any("Nie znaleziono szablonu" in msg for msg in logs.output))

@@ -11,7 +11,7 @@ class Wplata(models.Model):
 	rodzaje = [("wplata", "Wpłata"), ("zwrot", "Zwrot")]
 	kwota = models.DecimalField(default=0, blank=False, null=False, max_digits=10, decimal_places=2)
 	data = models.DateTimeField(auto_now_add=True)
-	rodzaj = models.CharField(max_length=7, default=rodzaje[1], choices=rodzaje)
+	rodzaj = models.CharField(max_length=7, default=rodzaje[0][0], choices=rodzaje)
 	zgloszenie = models.ForeignKey(
 		Zgloszenie,
 		related_name="wplaty",

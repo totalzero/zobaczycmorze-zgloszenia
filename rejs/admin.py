@@ -71,7 +71,7 @@ class WachtaForm(forms.ModelForm):
 			if rejs_initial:
 				try:
 					self.fields["czlonkowie"].queryset = Zgloszenie.objects.filter(rejs_id=rejs_initial)
-				except Exception:
+				except ValueError:
 					self.fields["czlonkowie"].queryset = Zgloszenie.objects.none()
 			else:
 				self.fields["czlonkowie"].queryset = Zgloszenie.objects.none()

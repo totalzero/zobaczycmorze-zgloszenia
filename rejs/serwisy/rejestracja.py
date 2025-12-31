@@ -74,7 +74,7 @@ class SerwisRejestracji:
 		Returns:
 			True jeśli wymagane są dane dodatkowe
 		"""
-		if zgloszenie.status not in ["QUALIFIED", "Zakwalifikowany"]:
+		if zgloszenie.status != "Zakwalifikowany":
 			return False
 
 		return not hasattr(zgloszenie, "dane_dodatkowe")

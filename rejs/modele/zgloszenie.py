@@ -60,7 +60,7 @@ class Zgloszenie(models.Model):
 	wzrok = models.CharField(
 		max_length=15,
 		choices=wzrok_statusy,
-		default=wzrok_statusy[0],
+		default=wzrok_statusy[0][0],
 		verbose_name="Status wzroku",
 	)
 	rola = models.CharField(max_length=25, default="ZALOGANT", choices=role_pola)
@@ -143,7 +143,7 @@ class Dane_Dodatkowe(models.Model):
 	poz2 = EncryptedTextField(
 		max_length=14,
 		choices=typ_dokumentu,
-		default=typ_dokumentu[0],
+		default=typ_dokumentu[0][0],
 		verbose_name="Typ dokumentu",
 	)
 	poz3 = EncryptedTextField(blank=False, null=False, default="ABC123", verbose_name="Numer dokumentu")

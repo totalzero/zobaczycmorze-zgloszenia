@@ -1,6 +1,6 @@
 from decimal import Decimal
 
-from django.db.models import Prefetch
+from django.db.models import Case, F, Sum, When
 from django.utils.timezone import localtime
 
 from rejs.models import Dane_Dodatkowe, Wachta, Wplata, Zgloszenie
@@ -18,7 +18,29 @@ class RaportRejsuBuilder:
 	# ---------- ZAŁOGA ----------
 	def build_zaloga(self):
 		rows = []
-		for z in Zgloszenie.objects.filter(rejs=self.rejs).select_related("wachta"):
+		queryset = (
+			Zgloszenie.objects.filter(rejs=self.rejs)
+			.select_related("wachta")
+			.annotate(
+				wplaty_sum=Sum(
+					Case(
+						When(wplaty__rodzaj="wplata", then="wplaty__kwota"),
+						default=Decimal("0"),
+					)
+				),
+				zwroty_sum=Sum(
+					Case(
+						When(wplaty__rodzaj="zwrot", then="wplaty__kwota"),
+						default=Decimal("0"),
+					)
+				),
+			)
+		)
+		cena = self.rejs.cena
+		for z in queryset:
+			wplaty = z.wplaty_sum or Decimal("0")
+			zwroty = z.zwroty_sum or Decimal("0")
+			suma = wplaty - zwroty
 			rows.append(
 				{
 					"imie": z.imie,
@@ -33,8 +55,8 @@ class RaportRejsuBuilder:
 					"wzrok": z.wzrok,
 					"rola": z.rola,
 					"wachta": z.wachta.nazwa if z.wachta else "",
-					"suma_wplat": z.suma_wplat,
-					"do_zaplaty": z.do_zaplaty,
+					"suma_wplat": suma,
+					"do_zaplaty": cena - suma,
 				}
 			)
 		return rows

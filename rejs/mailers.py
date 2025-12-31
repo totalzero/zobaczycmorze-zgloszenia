@@ -2,6 +2,7 @@ import logging
 
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
+from django.template import TemplateDoesNotExist
 from django.template.loader import render_to_string
 
 logger = logging.getLogger(__name__)
@@ -19,12 +20,12 @@ def send_simple_mail(subject, to_mail, template_base, context):
 
 	try:
 		txt_content = render_to_string(template_base + ".txt", context)
-	except Exception:
+	except TemplateDoesNotExist:
 		logger.warning("Nie znaleziono szablonu %s.txt", template_base)
 
 	try:
 		html_content = render_to_string(template_base + ".html", context)
-	except Exception:
+	except TemplateDoesNotExist:
 		logger.warning("Nie znaleziono szablonu %s.html", template_base)
 
 	if not txt_content and not html_content:

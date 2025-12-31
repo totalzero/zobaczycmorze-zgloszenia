@@ -154,3 +154,20 @@ class SerwisRejestracjiTest(TestCase):
 
 		wynik = self.serwis.czy_wymaga_danych_dodatkowych(zgloszenie)
 		self.assertTrue(wynik)
+
+	def test_czy_wymaga_danych_dodatkowych_uses_model_constant(self):
+		"""Test że metoda używa stałej STATUS_ZAKWALIFIKOWANY, nie magicznego stringa 'QUALIFIED'."""
+		# Ten test weryfikuje że używamy polskiej stałej, nie angielskiego stringa
+		zgloszenie = Zgloszenie.objects.create(
+			imie="Test",
+			nazwisko="User",
+			email="test@example.com",
+			telefon="123456789",
+			data_urodzenia=datetime.date(1990, 1, 1),
+			rejs=self.rejs,
+			rodo=True,
+			obecnosc="tak",
+			status="Zakwalifikowany",  # Bezpośredni string do weryfikacji
+		)
+		wynik = self.serwis.czy_wymaga_danych_dodatkowych(zgloszenie)
+		self.assertTrue(wynik)

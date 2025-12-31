@@ -4,7 +4,23 @@ from .models import Dane_Dodatkowe, Zgloszenie
 from .walidatory import kod_pocztowy_validator, telefon_validator, validate_pesel
 
 
-class ZgloszenieForm(forms.ModelForm):
+class AccessibleFormMixin:
+	"""Mixin dodający atrybuty ARIA dla dostępności formularzy."""
+
+	def _setup_aria_attributes(self):
+		"""Konfiguruje atrybuty aria-describedby i aria-invalid dla pól formularza."""
+		for field_name, field in self.fields.items():
+			describedby = []
+			if field.help_text:
+				describedby.append(f"id_{field_name}-hint")
+			if self.errors.get(field_name):
+				describedby.append(f"id_{field_name}-error")
+				field.widget.attrs["aria-invalid"] = "true"
+			if describedby:
+				field.widget.attrs["aria-describedby"] = " ".join(describedby)
+
+
+class ZgloszenieForm(AccessibleFormMixin, forms.ModelForm):
 	class Meta:
 		model = Zgloszenie
 		fields = [
@@ -114,16 +130,7 @@ class ZgloszenieForm(forms.ModelForm):
 
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)
-
-		for field_name, field in self.fields.items():
-			describedby = []
-			if field.help_text:
-				describedby.append(f"id_{field_name}-hint")
-			if self.errors.get(field_name):
-				describedby.append(f"id_{field_name}-error")
-				field.widget.attrs["aria-invalid"] = "true"
-			if describedby:
-				field.widget.attrs["aria-describedby"] = " ".join(describedby)
+		self._setup_aria_attributes()
 
 	def clean(self):
 		cleaned = super().clean()
@@ -171,7 +178,7 @@ class ZgloszenieForm(forms.ModelForm):
 		return kod
 
 
-class Dane_DodatkoweForm(forms.ModelForm):
+class Dane_DodatkoweForm(AccessibleFormMixin, forms.ModelForm):
 	class Meta:
 		model = Dane_Dodatkowe
 		fields = ["poz1", "poz2", "poz3", "zgoda_dane_wrazliwe"]
@@ -227,13 +234,4 @@ class Dane_DodatkoweForm(forms.ModelForm):
 
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)
-
-		for field_name, field in self.fields.items():
-			describedby = []
-			if field.help_text:
-				describedby.append(f"id_{field_name}-hint")
-			if self.errors.get(field_name):
-				describedby.append(f"id_{field_name}-error")
-				field.widget.attrs["aria-invalid"] = "true"
-			if describedby:
-				field.widget.attrs["aria-describedby"] = " ".join(describedby)
+		self._setup_aria_attributes()

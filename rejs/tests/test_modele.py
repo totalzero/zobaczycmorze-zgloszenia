@@ -171,6 +171,22 @@ class ZgloszenieModelTest(TestCase):
 		expected = reverse("zgloszenie_details", kwargs={"token": self.zgloszenie.token})
 		self.assertEqual(url, expected)
 
+	def test_wzrok_default_is_string(self):
+		"""Domyślna wartość wzroku powinna być stringiem 'WIDZI', nie krotką."""
+		zgloszenie = Zgloszenie(
+			imie="Test",
+			nazwisko="User",
+			email="test@example.com",
+			telefon="123456789",
+			data_urodzenia=datetime.date(1990, 1, 1),
+			rejs=self.rejs,
+			rodo=True,
+			obecnosc="tak",
+		)
+		self.assertEqual(zgloszenie.wzrok, "WIDZI")
+		self.assertIsInstance(zgloszenie.wzrok, str)
+		self.assertNotIn("(", zgloszenie.wzrok)
+
 
 class WplataModelTest(TestCase):
 	"""Testy modelu Wplata."""
@@ -198,6 +214,13 @@ class WplataModelTest(TestCase):
 		"""Test reprezentacji tekstowej wpłaty."""
 		wplata = Wplata.objects.create(zgloszenie=self.zgloszenie, kwota=Decimal("500.00"), rodzaj="wplata")
 		self.assertEqual(str(wplata), "Wpłata: 500.00 zł")
+
+	def test_rodzaj_default_is_string(self):
+		"""Domyślna wartość rodzaju wpłaty powinna być stringiem 'wplata', nie krotką."""
+		wplata = Wplata(kwota=Decimal("100.00"), zgloszenie=self.zgloszenie)
+		self.assertEqual(wplata.rodzaj, "wplata")
+		self.assertIsInstance(wplata.rodzaj, str)
+		self.assertNotIn("(", wplata.rodzaj)
 
 
 class OgloszenieModelTest(TestCase):
@@ -321,6 +344,17 @@ class Dane_DodatkoweModelTest(TestCase):
 			poz3="XYZ789",
 		)
 		self.assertFalse(dane2.zgoda_dane_wrazliwe)
+
+	def test_typ_dokumentu_default_is_string(self):
+		"""Domyślna wartość typu dokumentu powinna być stringiem 'paszport', nie krotką."""
+		dane = Dane_Dodatkowe(
+			zgloszenie=self.zgloszenie,
+			poz1="90021401384",
+			poz3="ABC123",
+		)
+		self.assertEqual(dane.poz2, "paszport")
+		self.assertIsInstance(dane.poz2, str)
+		self.assertNotIn("(", dane.poz2)
 
 
 class AuditLogModelTest(TestCase):

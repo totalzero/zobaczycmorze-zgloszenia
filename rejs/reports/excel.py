@@ -10,12 +10,12 @@ class ExcelExporter:
 	def save(self):
 		self.wb.save(self.filename)
 
-	# ---------- ZAŁOGA ----------
-	def add_zaloga(self, rows):
-		ws = self.wb.active
-		ws.title = "Załoga"
+	def _add_sheet_with_headers(self, ws, rows):
+		"""Dodaje nagłówki i wiersze do arkusza z formatowaniem."""
+		if not rows:
+			return
 
-		headers = rows[0].keys() if rows else []
+		headers = rows[0].keys()
 		ws.append(list(headers))
 
 		for cell in ws[1]:
@@ -23,6 +23,12 @@ class ExcelExporter:
 
 		for r in rows:
 			ws.append(list(r.values()))
+
+	# ---------- ZAŁOGA ----------
+	def add_zaloga(self, rows):
+		ws = self.wb.active
+		ws.title = "Załoga"
+		self._add_sheet_with_headers(ws, rows)
 
 	# ---------- WACHTY ----------
 	def add_wachty(self, wachty):
@@ -38,15 +44,7 @@ class ExcelExporter:
 	# ---------- WPŁATY ----------
 	def add_wplaty(self, rows):
 		ws = self.wb.create_sheet("Wpłaty")
-
-		headers = rows[0].keys() if rows else []
-		ws.append(list(headers))
-
-		for cell in ws[1]:
-			cell.font = Font(bold=True)
-
-		for r in rows:
-			ws.append(list(r.values()))
+		self._add_sheet_with_headers(ws, rows)
 
 	# ---------- DANE WRAŻLIWE ----------
 	def add_dane_wrazliwe(self, rows):
@@ -54,12 +52,4 @@ class ExcelExporter:
 			return
 
 		ws = self.wb.create_sheet("Dane wrażliwe")
-
-		headers = rows[0].keys()
-		ws.append(list(headers))
-
-		for cell in ws[1]:
-			cell.font = Font(bold=True)
-
-		for r in rows:
-			ws.append(list(r.values()))
+		self._add_sheet_with_headers(ws, rows)

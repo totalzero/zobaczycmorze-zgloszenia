@@ -155,3 +155,30 @@ class Dane_DodatkoweFormTest(TestCase):
 		form = Dane_DodatkoweForm(data=self.get_valid_form_data(poz1="900 214 01384"))
 		self.assertTrue(form.is_valid(), form.errors)
 		self.assertEqual(form.cleaned_data["poz1"], "90021401384")
+
+
+class AccessibleFormMixinTest(TestCase):
+	"""Testy AccessibleFormMixin dla dostępności formularzy."""
+
+	def setUp(self):
+		self.rejs = Rejs.objects.create(
+			nazwa="Rejs testowy",
+			od=future_date(30),
+			do=future_date(44),
+			start="Gdynia",
+			koniec="Sztokholm",
+		)
+
+	def test_zgloszenie_form_aria_describedby_set(self):
+		"""Test że ZgloszenieForm ustawia aria-describedby dla pól z help_text."""
+		form = ZgloszenieForm(initial={"rejs": self.rejs})
+		# telefon ma zdefiniowany help_text
+		self.assertIn("aria-describedby", form.fields["telefon"].widget.attrs)
+		self.assertIn("id_telefon-hint", form.fields["telefon"].widget.attrs["aria-describedby"])
+
+	def test_dane_dodatkowe_form_aria_describedby_set(self):
+		"""Test że Dane_DodatkoweForm ustawia aria-describedby dla pól z help_text."""
+		form = Dane_DodatkoweForm()
+		# poz1 (PESEL) ma zdefiniowany help_text
+		self.assertIn("aria-describedby", form.fields["poz1"].widget.attrs)
+		self.assertIn("id_poz1-hint", form.fields["poz1"].widget.attrs["aria-describedby"])
