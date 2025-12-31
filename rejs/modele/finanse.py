@@ -8,10 +8,12 @@ from rejs.modele.zgloszenie import Zgloszenie
 
 
 class Wplata(models.Model):
-	rodzaje = [("wplata", "Wpłata"), ("zwrot", "Zwrot")]
+	RODZAJ_WPLATA = "wplata"
+	RODZAJ_ZWROT = "zwrot"
+	rodzaje = [(RODZAJ_WPLATA, "Wpłata"), (RODZAJ_ZWROT, "Zwrot")]
 	kwota = models.DecimalField(default=0, blank=False, null=False, max_digits=10, decimal_places=2)
 	data = models.DateTimeField(auto_now_add=True)
-	rodzaj = models.CharField(max_length=7, default=rodzaje[0][0], choices=rodzaje)
+	rodzaj = models.CharField(max_length=7, default=RODZAJ_WPLATA, choices=rodzaje)
 	zgloszenie = models.ForeignKey(
 		Zgloszenie,
 		related_name="wplaty",

@@ -41,9 +41,9 @@ def wplata_post_save(sender, instance, created, raw=False, **kwargs):
 	if raw or not created:
 		return
 
-	if instance.rodzaj == "wplata":
+	if instance.rodzaj == Wplata.RODZAJ_WPLATA:
 		serwis_notyfikacji.powiadom_o_wplacie(instance)
-	elif instance.rodzaj == "zwrot":
+	elif instance.rodzaj == Wplata.RODZAJ_ZWROT:
 		serwis_notyfikacji.powiadom_o_zwrocie(instance)
 
 

@@ -24,13 +24,13 @@ class RaportRejsuBuilder:
 			.annotate(
 				wplaty_sum=Sum(
 					Case(
-						When(wplaty__rodzaj="wplata", then="wplaty__kwota"),
+						When(wplaty__rodzaj=Wplata.RODZAJ_WPLATA, then="wplaty__kwota"),
 						default=Decimal("0"),
 					)
 				),
 				zwroty_sum=Sum(
 					Case(
-						When(wplaty__rodzaj="zwrot", then="wplaty__kwota"),
+						When(wplaty__rodzaj=Wplata.RODZAJ_ZWROT, then="wplaty__kwota"),
 						default=Decimal("0"),
 					)
 				),

@@ -14,9 +14,10 @@ from django.urls import reverse
 from django.template.loader import render_to_string
 
 from rejs.mailers import FROM, send_mass_mail_html, send_simple_mail
+from rejs.modele.zgloszenie import Zgloszenie
 
 if TYPE_CHECKING:
-	from rejs.models import Ogloszenie, Wplata, Zgloszenie
+	from rejs.models import Ogloszenie, Wplata
 
 
 class SerwisNotyfikacji:
@@ -70,10 +71,10 @@ class SerwisNotyfikacji:
 			"link": link,
 		}
 
-		if zgloszenie.status == "Zakwalifikowany":
+		if zgloszenie.status == Zgloszenie.STATUS_ZAKWALIFIKOWANY:
 			subject = f"Potwierdzamy zakwalifikowanie na rejs {zgloszenie.rejs.nazwa}"
 			send_simple_mail(subject, zgloszenie.email, "emails/zgloszenie_potwierdzone", context)
-		elif zgloszenie.status == "Odrzucone":
+		elif zgloszenie.status == Zgloszenie.STATUS_ODRZUCONE:
 			subject = f"Odrzucone zgłoszenie na rejs {zgloszenie.rejs.nazwa}"
 			send_simple_mail(subject, zgloszenie.email, "emails/zgloszenie_o", context)
 

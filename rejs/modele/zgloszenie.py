@@ -72,7 +72,7 @@ class Zgloszenie(models.Model):
 		null=True,
 		blank=True,
 	)
-	token = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
+	token = models.UUIDField(default=uuid.uuid4, unique=True, editable=False, db_index=True)
 	data_zgloszenia = models.DateTimeField(auto_now_add=True, editable=False)
 
 	if TYPE_CHECKING:
@@ -102,16 +102,18 @@ class Zgloszenie(models.Model):
 	@property
 	def suma_wplat(self) -> Decimal:
 		"""Oblicza sumę wpłat minus zwroty (zoptymalizowane - jedno zapytanie SQL)."""
+		from rejs.modele.finanse import Wplata
+
 		result = self.wplaty.aggregate(
 			wplaty_sum=Sum(
 				Case(
-					When(rodzaj="wplata", then="kwota"),
+					When(rodzaj=Wplata.RODZAJ_WPLATA, then="kwota"),
 					default=Decimal("0"),
 				)
 			),
 			zwroty_sum=Sum(
 				Case(
-					When(rodzaj="zwrot", then="kwota"),
+					When(rodzaj=Wplata.RODZAJ_ZWROT, then="kwota"),
 					default=Decimal("0"),
 				)
 			),
@@ -187,12 +189,18 @@ class Dane_Dodatkowe(models.Model):
 	def __str__(self) -> str:
 		return f"dane dodatkowe dla zgłoszenia: {self.zgloszenie_id}"
 
+	@staticmethod
+	def _mask_value(value: str, prefix_len: int, suffix_len: int) -> str:
+		"""Maskuje wartość, pozostawiając widoczny prefix i suffix."""
+		if len(value) <= prefix_len + suffix_len:
+			return "*" * len(value)
+		masked_len = len(value) - prefix_len - suffix_len
+		return value[:prefix_len] + ("*" * masked_len) + value[-suffix_len:]
+
 	@property
 	def masked_pesel(self):
-		result = self.poz1[:2] + ("*" * (len(self.poz1) - 3)) + self.poz1[len(self.poz1) - 1]
-		return result
+		return self._mask_value(self.poz1, prefix_len=2, suffix_len=1)
 
 	@property
 	def masked_dokument(self):
-		result = self.poz3[:1] + ("*" * (len(self.poz3) - 2)) + self.poz3[len(self.poz3) - 1]
-		return result
+		return self._mask_value(self.poz3, prefix_len=1, suffix_len=1)

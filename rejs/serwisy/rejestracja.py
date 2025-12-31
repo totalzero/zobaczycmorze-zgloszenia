@@ -74,7 +74,9 @@ class SerwisRejestracji:
 		Returns:
 			True jeśli wymagane są dane dodatkowe
 		"""
-		if zgloszenie.status != "Zakwalifikowany":
+		from rejs.models import Zgloszenie as ZgloszenieModel
+
+		if zgloszenie.status != ZgloszenieModel.STATUS_ZAKWALIFIKOWANY:
 			return False
 
 		return not hasattr(zgloszenie, "dane_dodatkowe")
