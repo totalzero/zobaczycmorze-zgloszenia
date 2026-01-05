@@ -98,9 +98,9 @@ class Zgloszenie(models.Model):
 		max_length=15, blank=False, null=False, verbose_name="Numer telefonu"
 	)
 	data_urodzenia = models.DateField(blank=False, null=False, verbose_name="data urodzenia")
-	adres = models.CharField(null=False, blank=False, default="unknown")
+	adres = models.CharField(null=False, blank=False, default="adres")
 	kod_pocztowy = models.CharField(null=False, blank=False, default="00-000", verbose_name="kod pocztowy")
-	miejscowosc = models.CharField(null=False, blank=False, default="unknown")
+	miejscowosc = models.CharField(null=False, blank=False, default="miejscowość")
 	obecnosc = models.CharField(
 		max_length=3,
 		choices=obecnosc_pola,
