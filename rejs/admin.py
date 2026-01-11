@@ -115,7 +115,7 @@ class RejsyAdmin(admin.ModelAdmin):
 
 @admin.register(Zgloszenie)
 class ZgloszenieAdmin(admin.ModelAdmin):
-	list_display = ("id", "imie", "nazwisko", "rejs")
+	list_display = [field.name for field in Zgloszenie._meta.fields]
 	list_filter = ("rejs",)
 	search_fields = ("imie", "nazwisko")
 	readonly_fields = ("rejs_cena", "do_zaplaty", "suma_wplat")

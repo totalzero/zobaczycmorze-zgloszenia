@@ -83,8 +83,11 @@ class Zgloszenie(models.Model):
 		("WIDZI", "widzący"),
 		("NIEWIDOMY", "niewidomy"),
 		("SLABO-WIDZACY", "słabo widzący"),
+		("lekko-slabo-widzacy", "lekko słabo widzący"),
+		("bardzo-slabo-widzacy", "bardzo słabo widzący"),
+		("prawie-niewidzacy", "prawie niewidomy"),
 	]
-	role_pola = [("ZALOGANT", "załogant"), ("OFICER-WACHTY", "oficer wachty")]
+	role_pola = [("ZALOGANT", "załogant"), ("OFICER-WACHTY", "oficer wachty"), ("starszy-oficer", "starszy oficer")]
 	rozmiary_koszulek = [
 		("XS", "XS"),
 		("S", "s"),
@@ -95,6 +98,7 @@ class Zgloszenie(models.Model):
 		("XXXL", "XXXL")
 	]
 	obecnosc_pola = [("tak", "tak"), ("nie", "nie")]
+	plec_pola = [("kobieta", "kobieta"), ("mezczyzna", "mężczyzna"), ("inna", "inna")]
 
 	imie = models.CharField(
 		max_length=100, null=False, blank=False, verbose_name="Imię"
@@ -107,6 +111,7 @@ class Zgloszenie(models.Model):
 		max_length=15, blank=False, null=False, verbose_name="Numer telefonu"
 	)
 	data_urodzenia = models.DateField(blank=False, null=False, verbose_name="data urodzenia")
+	plec = models.CharField(verbose_name="płeć", choices=plec_pola, max_length=10, default="inna")
 	adres = models.CharField(null=False, blank=False, default="adres")
 	kod_pocztowy = models.CharField(null=False, blank=False, default="00-000", verbose_name="kod pocztowy")
 	miejscowosc = models.CharField(null=False, blank=False, default="miejscowość")
@@ -119,7 +124,7 @@ class Zgloszenie(models.Model):
 	rozmiar_koszulki = models.CharField(choices=rozmiary_koszulek, max_length=5, default="M", verbose_name="rozmiar koszulki")
 	uwagi = models.TextField(max_length=800, blank=True, null=True)
 	wzrok = models.CharField(
-		max_length=15,
+		max_length=25,
 		choices=wzrok_statusy,
 		default=wzrok_statusy[0],
 		verbose_name="Status wzroku",

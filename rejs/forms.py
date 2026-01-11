@@ -17,10 +17,11 @@ kod_pocztowy_validator = RegexValidator(
 class ZgloszenieForm(forms.ModelForm):
 	class Meta:
 		model = Zgloszenie
-		fields = ["imie", "nazwisko", "email", "telefon", "data_urodzenia", "adres", "kod_pocztowy", "miejscowosc", "wzrok", "obecnosc", "rozmiar_koszulki", "uwagi", "rodo"]
+		fields = ["imie", "nazwisko", "plec", "email", "telefon", "data_urodzenia", "adres", "kod_pocztowy", "miejscowosc", "wzrok", "obecnosc", "rozmiar_koszulki", "uwagi", "rodo"]
 		labels = {
 			"imie": "Imię",
 			"nazwisko": "Nazwisko",
+			"plec": "Płeć",
 			"email": "Adres e-mail",
 			"telefon": "Numer telefonu",
 			"data_urodzenia": "Data urodzenia",
@@ -53,6 +54,11 @@ class ZgloszenieForm(forms.ModelForm):
 			"nazwisko": forms.TextInput(
 				attrs={
 					"autocomplete": "family-name",
+					"aria-required": "true",
+				}
+			),
+			"plec": forms.RadioSelect(
+				attrs={
 					"aria-required": "true",
 				}
 			),

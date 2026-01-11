@@ -1,4 +1,7 @@
 Cieszymy się, że postanowiłeś/postanowiłaś dołączyć do naszej załogi!. Twoje zgłoszenie na rejs Zobaczyć Morze, zostało pomyślnie zarejestrowane w systemie.
+Podgląd swojego zgłoszenia, oraz pozostałe informacje na temat rejsu możesz uzyskać klikając w poniższy link:
+{{ link }}
+
     Prosimy o wpłatę zaliczki w wysokości {{ zgl.rejs.zaliczka }} zł w ciągu 15 dni od rejestracji na konto:
     Fundacja Zobaczyć Morze im. Tomka Opoki
         ul. Gryfa Pomorskiego 87b / 1
