@@ -37,12 +37,12 @@ class ZgloszenieForm(forms.ModelForm):
 		help_texts = {
 			"telefon": "Format: 9-15 cyfr, np. 123456789 lub +48123456789",
 			"data_urodzenia": "Podaj date urodzenia w formacie dd.mm.rrrr (np. 05.10.1990)",
-			"kod_pocztowy": "Format: XX-XXX gdzie X oznacza cyfrę",
+			"kod_pocztowy": "Format: 00-000",
 "wzrok": "Wybierz opcję najbliższą Twojej sytuacji",
 			"obecnosc": "Czy brałeś juz udział w rejsach zobaczyć morze?",
-			"rozmiar_koszulki": "wybierz swój właściwy wymiar",
+			"rozmiar_koszulki": "wybierz swój właściwy rozmiar",
 			"uwagi": "przekaż nam ważne informację o sobie.",
-"rodo": "czy zgadzasz się na przetwarzanie danych osobowych?",
+"rodo": "Zgadzam się na przetwarzanie danych osobowych.",
 		}
 		widgets = {
 			"imie": forms.TextInput(
@@ -57,7 +57,7 @@ class ZgloszenieForm(forms.ModelForm):
 					"aria-required": "true",
 				}
 			),
-			"plec": forms.RadioSelect(
+			"plec": forms.Select(
 				attrs={
 					"aria-required": "true",
 				}
@@ -86,20 +86,17 @@ class ZgloszenieForm(forms.ModelForm):
 			),
 			"adres": forms.TextInput(
 				attrs={
-					"placeholder": "twój adres",
 					"aria-required": "true",
 				}
 			),
 			"kod_pocztowy": forms.TextInput(
 				attrs={
 					"inputmode": "numeric",
-					"placeholder": "00-001",
 					"aria-required": "true",
 				}
 			),
 			"miejscowosc": forms.TextInput(
 				attrs={
-					"placeholder": "miejscowość",
 					"aria-required": "true",
 				}
 			),
@@ -192,6 +189,17 @@ class ZgloszenieForm(forms.ModelForm):
 		kod_pocztowy_validator(kod)
 
 		return kod
+	
+	def clean_rodo(self):
+		rodo = self.cleaned_data.get("rodo")
+
+		if rodo is not True:
+			raise forms.ValidationError(
+				"Aby wysłać formularz, musisz wyrazić zgodę na przetwarzanie danych osobowych."
+			)
+
+		return rodo
+
 
 
 class Dane_DodatkoweForm(forms.ModelForm):

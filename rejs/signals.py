@@ -29,7 +29,10 @@ def zgloszenie_post_save(sender, instance, created, **kwargs):
 		context = {
 			"zgl": instance,
 			"rejs": instance.rejs,
-			"link": instance.get_absolute_url()
+			"link": settings.SITE_URL + reverse(
+			"zgloszenie_details", kwargs={"token": instance.token}
+		)
+		
 			if hasattr(instance, "get_absolute_url")
 			else None,
 		}

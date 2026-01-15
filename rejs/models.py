@@ -111,10 +111,10 @@ class Zgloszenie(models.Model):
 		max_length=15, blank=False, null=False, verbose_name="Numer telefonu"
 	)
 	data_urodzenia = models.DateField(blank=False, null=False, verbose_name="data urodzenia")
-	plec = models.CharField(verbose_name="płeć", choices=plec_pola, max_length=10, default="inna")
-	adres = models.CharField(null=False, blank=False, default="adres")
-	kod_pocztowy = models.CharField(null=False, blank=False, default="00-000", verbose_name="kod pocztowy")
-	miejscowosc = models.CharField(null=False, blank=False, default="miejscowość")
+	plec = models.CharField(verbose_name="płeć", choices=plec_pola, max_length=10)
+	adres = models.CharField(null=False, blank=False)
+	kod_pocztowy = models.CharField(null=False, blank=False, verbose_name="kod pocztowy")
+	miejscowosc = models.CharField(null=False, blank=False)
 	obecnosc = models.CharField(
 		max_length=3,
 		choices=obecnosc_pola,
@@ -195,12 +195,16 @@ class Zgloszenie(models.Model):
 
 
 class Wplata(models.Model):
-	rodzaje = [("wplata", "Wpłata"), ("zwrot", "Zwrot")]
+	RODZAJ_PAYU = "payu"
+	rodzaje = [("wplata", "Wpłata"), ("zwrot", "Zwrot"), ("payu", "payu")]
 	kwota = models.DecimalField(
 		default=0, blank=False, null=False, max_digits=10, decimal_places=2
 	)
 	data = models.DateTimeField(auto_now_add=True)
 	rodzaj = models.CharField(max_length=7, default=rodzaje[1], choices=rodzaje)
+	opis = models.CharField(max_length=255, blank=True, null=True)
+	rodzaj_id = models.CharField(null=True, blank=True, max_length=64)
+	zrodlo_id = models.CharField(null=True, blank=True, max_length=255)
 	zgloszenie = models.ForeignKey(
 		Zgloszenie,
 		related_name="wplaty",
@@ -280,3 +284,42 @@ class Dane_Dodatkowe(models.Model):
 	def masked_dokument(self):
 		result = self.poz3[:1] + ("*" * (len(self.poz3) - 2)) + self.poz3[len(self.poz3) - 1]
 		return result
+
+# rejs/models.py
+
+class PlatnoscPayU(models.Model):
+	STATUS_NEW = "NEW"
+	STATUS_PENDING = "PENDING"
+	STATUS_COMPLETED = "COMPLETED"
+	STATUS_FAILED = "FAILED"
+
+	STATUS_CHOICES = [
+		(STATUS_NEW, "Nowa"),
+		(STATUS_PENDING, "W toku"),
+		(STATUS_COMPLETED, "Zakończona"),
+		(STATUS_FAILED, "Błąd"),
+	]
+
+	TYP_CHOICES = [
+		("zaliczka", "Zaliczka"),
+		("reszta", "Reszta"),
+	]
+
+	zgloszenie = models.ForeignKey(
+		"Zgloszenie",
+		on_delete=models.CASCADE,
+		related_name="platnosci_payu",
+	)
+
+	payu_order_id = models.CharField(max_length=64, blank=True, null=True)
+	kwota = models.DecimalField(max_digits=10, decimal_places=2)
+	typ = models.CharField(max_length=20, choices=TYP_CHOICES)
+	status = models.CharField(
+		max_length=20,
+		choices=STATUS_CHOICES,
+		default=STATUS_NEW,
+	)
+	utworzona = models.DateTimeField(auto_now_add=True)
+
+	def __str__(self):
+		return f"{self.zgloszenie} – {self.typ} – {self.kwota} PLN"

@@ -96,6 +96,20 @@
                 {% endif %}
             </dd>
         </div>
+        <div>
+            {% if zgloszenie.suma_wplat < zgloszenie.rejs.zaliczka %}
+<a href="{% url 'zaplac' zgloszenie.token 'zaliczka' %}">
+    Opłać zaliczkę
+</a>
+{% endif %}
+
+{% if zgloszenie.status == 'Zakwalifikowany' and zgloszenie.do_zaplaty > 0 %}
+<a href="{% url 'zaplac' zgloszenie.token 'reszta' %}">
+    Opłać pozostałą kwotę
+</a>
+{% endif %}
+
+        </div>
     </dl>
 </section>
 {% if zgloszenie.wachta %}
