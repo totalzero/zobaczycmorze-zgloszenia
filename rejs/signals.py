@@ -26,16 +26,16 @@ def zgloszenie_pre_save(sender, instance, **kwargs):
 def zgloszenie_post_save(sender, instance, created, **kwargs):
 	if created:
 		subject = f"Potwierdzenie zgłoszenia na rejs: {instance.rejs.nazwa}"
-		context = {
-			"zgl": instance,
-			"rejs": instance.rejs,
-			"link": settings.SITE_URL + reverse(
+		link = settings.SITE_URL + reverse(
 			"zgloszenie_details", kwargs={"token": instance.token}
 		)
-		
-			if hasattr(instance, "get_absolute_url")
-			else None,
+
+		context = {
+				"zgl": instance,
+				"rejs": instance.rejs,
+				"link": link,
 		}
+
 		send_simple_mail(
 			subject, instance.email, "emails/zgloszenie_utworzone", context
 		)

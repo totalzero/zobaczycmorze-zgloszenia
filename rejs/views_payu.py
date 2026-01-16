@@ -1,7 +1,10 @@
 import json
-from django.http import HttpResponse, HttpResponseForbidden
+from django.http import Http404, HttpResponse, HttpResponseForbidden
+from django.shortcuts import get_object_or_404, redirect
 from django.views.decorators.csrf import csrf_exempt
-from .models import PlatnoscPayU, Wplata
+
+from rejs.payu import PayUClient
+from .models import PlatnoscPayU, Wplata, Zgloszenie
 from .payu_verify import verify_payu_signature
 
 @csrf_exempt
