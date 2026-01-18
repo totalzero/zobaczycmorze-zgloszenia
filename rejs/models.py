@@ -8,6 +8,8 @@ from django.forms import ValidationError
 from django.urls import reverse
 from cryptography.fernet import Fernet
 from django.conf import settings
+from datetime import date
+
 
 fernet = Fernet(settings.DJANGO_FIELD_ENCRYPTION_KEY.encode())
 
@@ -142,6 +144,17 @@ class Zgloszenie(models.Model):
 	data_zgloszenia = models.DateTimeField(auto_now_add=True, editable=False)
 
 	@property
+	def wiek(self) -> int:
+		today = date.today()
+		born = self.data_urodzenia
+		return (
+			today.year
+			- born.year
+			- ((today.month, today.day) < (born.month, born.day))
+		)
+
+
+	@property
 	def suma_wplat(self) -> Decimal:
 		"""Oblicza sumę wpłat minus zwroty (zoptymalizowane - jedno zapytanie SQL)."""
 		result = self.wplaty.aggregate(
@@ -264,7 +277,10 @@ class Dane_Dodatkowe(models.Model):
 						   null=False,
 						   default="ABC123",
 						   verbose_name="numer dokumentu")
-	
+	pos4 = EncryptedTextField(null=False, blank=False, verbose_name="miejsce urodzenia", default="", max_length=100)
+	pos5 = EncryptedTextField(null=False, blank=False, default="", verbose_name="obywatelstwo", max_length=50)
+	pos6 = models.DateField(verbose_name="data ważności dokumentu", max_length=10, null=False, blank=False)
+
 	class Meta:
 		verbose_name = "dane dodatkowe"
 		verbose_name_plural = "dane dodatkowe"
@@ -285,7 +301,6 @@ class Dane_Dodatkowe(models.Model):
 		result = self.poz3[:1] + ("*" * (len(self.poz3) - 2)) + self.poz3[len(self.poz3) - 1]
 		return result
 
-# rejs/models.py
 
 class PlatnoscPayU(models.Model):
 	STATUS_NEW = "NEW"
