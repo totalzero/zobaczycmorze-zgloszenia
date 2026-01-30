@@ -55,6 +55,7 @@ class PayUClient:
 				"Content-Type": "application/json",
 				"Accept": "application/json",
 			},
+			    allow_redirects=False,  
 		)
 
 		r.raise_for_status()
