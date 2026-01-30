@@ -6,6 +6,7 @@ PAYU_URLS = {
 	"production": "https://secure.payu.com",
 }
 
+
 class PayUClient:
 	def __init__(self):
 		self.base_url = PAYU_URLS[settings.PAYU["ENV"]]
@@ -37,17 +38,23 @@ class PayUClient:
 			"currencyCode": "PLN",
 			"totalAmount": int(kwota * 100),
 			"buyer": {"email": email},
-			"products": [{
-				"name": opis,
-				"unitPrice": int(kwota * 100),
-				"quantity": 1,
-			}],
+			"products": [
+				{
+					"name": opis,
+					"unitPrice": int(kwota * 100),
+					"quantity": 1,
+				}
+			],
 		}
 
 		r = requests.post(
 			f"{self.base_url}/api/v2_1/orders",
 			json=data,
-			headers={"Authorization": f"Bearer {token}"},
+			headers={
+				"Authorization": f"Bearer {token}",
+				"Content-Type": "application/json",
+			},
 		)
+
 		r.raise_for_status()
 		return r.json()
