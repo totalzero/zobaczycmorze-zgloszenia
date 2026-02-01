@@ -22,6 +22,7 @@ class PayUClient:
 				"client_id": self.client_id,
 				"client_secret": self.client_secret,
 			},
+			timeout=5,
 		)
 		r.raise_for_status()
 		return r.json()["access_token"]
@@ -37,7 +38,9 @@ class PayUClient:
 			"description": opis,
 			"currencyCode": "PLN",
 			"totalAmount": int(kwota * 100),
-			"buyer": {"email": email},
+			"buyer": {
+				"email": email,
+			},
 			"products": [
 				{
 					"name": opis,
@@ -55,7 +58,23 @@ class PayUClient:
 				"Content-Type": "application/json",
 				"Accept": "application/json",
 			},
-			    allow_redirects=False,  
+			allow_redirects=False,
+			timeout=5,
+		)
+
+		r.raise_for_status()
+		return r.json()
+
+	def get_order(self, order_id):
+		token = self.get_token()
+
+		r = requests.get(
+			f"{self.base_url}/api/v2_1/orders/{order_id}",
+			headers={
+				"Authorization": f"Bearer {token}",
+				"Accept": "application/json",
+			},
+			timeout=5,
 		)
 
 		r.raise_for_status()
