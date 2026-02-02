@@ -160,7 +160,7 @@ class Zgloszenie(models.Model):
 		result = self.wplaty.aggregate(
 			wplaty_sum=Sum(
 				Case(
-					When(rodzaj="wplata", then="kwota"),
+					When(rodzaj__in=["wplata", "payu"], then="kwota"),
 					default=Decimal("0"),
 				)
 			),
