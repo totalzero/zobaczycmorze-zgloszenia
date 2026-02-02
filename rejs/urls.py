@@ -24,5 +24,10 @@ urlpatterns = [
 urlpatterns += [
 	path("payu/zaplac/<uuid:token>/<str:typ>/", zaplac, name="zaplac"),
 	path("payu/webhook/", payu_webhook, name="payu_webhook"),
-	path("payu/continue/", payu_continue, name="payu_continue"),
+	path(
+	"payu/continue/<uuid:token>/<int:platnosc_id>/",
+	payu_continue,
+	name="payu_continue",
+),
+
 ]
