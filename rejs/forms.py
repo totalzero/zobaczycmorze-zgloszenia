@@ -201,34 +201,62 @@ class ZgloszenieForm(forms.ModelForm):
 		return rodo
 
 
-
 class Dane_DodatkoweForm(forms.ModelForm):
 	class Meta:
 		model = Dane_Dodatkowe
-		fields = ["poz1", "poz2", "poz3"]
+		fields = [
+			"poz1",
+			"poz2",
+			"poz3",
+			"pos4",
+			"pos5",
+			"pos6",
+		]
 		labels = {
 			"poz1": "pesel",
 			"poz2": "typ dokumentu",
 			"poz3": "numer dokumentu",
+			"pos4": "miejsce urodzenia",
+			"pos5": "obywatelstwo",
+			"pos6": "data ważności dokumentu",
 		}
 		help_texts = {
 			"poz1": "podaj swój pesel",
 			"poz2": "wybierz dokument który według procedur oddasz przy zaokrętowaniu się.",
-			"poz3": "podaj numer dokumentu który oddasz przy zaokrętowaniu."
-}
+			"poz3": "podaj numer dokumentu który oddasz przy zaokrętowaniu.",
+			"pos4": "podaj miejsce urodzenia zgodnie z dokumentem",
+			"pos5": "podaj obywatelstwo",
+			"pos6": "podaj datę ważności dokumentu",
+		}
 		widgets = {
 			"poz1": forms.TextInput(
 				attrs={
 					"aria-required": "true",
 				}
 			),
-"poz2": forms.Select(
+			"poz2": forms.Select(
 				attrs={
 					"aria-required": "true",
 				}
 			),
-						"poz3": forms.TextInput(
+			"poz3": forms.TextInput(
 				attrs={
+					"aria-required": "true",
+				}
+			),
+			"pos4": forms.TextInput(
+				attrs={
+					"aria-required": "true",
+				}
+			),
+			"pos5": forms.TextInput(
+				attrs={
+					"aria-required": "true",
+				}
+			),
+			"pos6": forms.DateInput(
+				attrs={
+					"type": "date",
 					"aria-required": "true",
 				}
 			),
