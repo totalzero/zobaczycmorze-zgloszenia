@@ -1,0 +1,10 @@
+{% if status == "COMPLETED" %}
+	Dziękujemy za płatność!
+{% else %}
+	Płatność nieudana.
+{% endif %}
+
+Kwota: {{ kwota }} zł  
+ID płatności: {{ order_id }}
+
+<a href="{{ zgloszenie.get_absolute_url }}">Powrót do zgłoszenia</a>

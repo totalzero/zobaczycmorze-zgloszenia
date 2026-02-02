@@ -1,11 +1,12 @@
 import json
 from django.http import Http404, HttpResponse, HttpResponseForbidden
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.csrf import csrf_exempt
 
 from rejs.payu import PayUClient
 from .models import PlatnoscPayU, Wplata, Zgloszenie
 from .payu_verify import verify_payu_signature
+
 
 @csrf_exempt
 def payu_webhook(request):
@@ -34,17 +35,18 @@ def payu_webhook(request):
 		return HttpResponse("OK")
 
 	# 3️⃣ obsługa statusów
-	if status == "COMPLETED":
+	if status == PlatnoscPayU.STATUS_COMPLETED:
 		platnosc.status = PlatnoscPayU.STATUS_COMPLETED
 		platnosc.save()
 
-		
-		Wplata.objects.create(
+		Wplata.objects.get_or_create(
 			zgloszenie=platnosc.zgloszenie,
-			kwota=platnosc.kwota,
-			rodzaj=Wplata.RODZAJ_PAYU,
-			opis=f"PayU – {platnosc.typ}",
 			zrodlo_id=order_id,
+			defaults={
+				"kwota": platnosc.kwota,
+				"rodzaj": Wplata.RODZAJ_PAYU,
+				"opis": f"PayU – {platnosc.typ}",
+			}
 		)
 
 	elif status in ("FAILED", "CANCELED"):
@@ -52,6 +54,7 @@ def payu_webhook(request):
 		platnosc.save()
 
 	return HttpResponse("OK")
+
 
 def zaplac(request, token, typ):
 	zgl = get_object_or_404(Zgloszenie, token=token)
@@ -79,7 +82,7 @@ def zaplac(request, token, typ):
 		opis=f"{zgl.rejs.nazwa} – {typ}",
 		email=zgl.email,
 		notify_url=request.build_absolute_uri("/payu/webhook/"),
-		continue_url=request.build_absolute_uri(zgl.get_absolute_url()),
+		continue_url=request.build_absolute_uri("/payu/continue/")
 	)
 
 	platnosc.payu_order_id = result["orderId"]
@@ -87,3 +90,54 @@ def zaplac(request, token, typ):
 	platnosc.save()
 
 	return redirect(result["redirectUri"])
+
+
+@csrf_exempt
+def payu_continue(request):
+	order_id = request.GET.get("orderId")
+
+	if not order_id:
+		return render(request, "payu/error.html", {
+			"message": "Brak ID płatności."
+		})
+
+	platnosc = get_object_or_404(
+		PlatnoscPayU.objects.select_related("zgloszenie"),
+		payu_order_id=order_id
+	)
+
+	client = PayUClient()
+
+	try:
+		data = client.get_order(order_id)
+	except Exception:
+		return render(request, "payu/error.html", {
+			"message": "Nie udało się pobrać statusu płatności z PayU."
+		})
+
+	order = data["orders"][0]
+	status = order["status"]
+
+	# 🔁 synchronizacja statusu
+	if platnosc.status != status:
+		platnosc.status = status
+		platnosc.save()
+
+	# 💰 tworzenie wpłaty (IDEMPOTENTNIE)
+	if status == PlatnoscPayU.STATUS_COMPLETED:
+		Wplata.objects.get_or_create(
+			zgloszenie=platnosc.zgloszenie,
+			zrodlo_id=order_id,
+			defaults={
+				"kwota": platnosc.kwota,
+				"rodzaj": Wplata.RODZAJ_PAYU,
+				"opis": f"PayU – {platnosc.typ}",
+			}
+		)
+
+	return render(request, "payu/summary.html", {
+		"status": status,
+		"kwota": platnosc.kwota,
+		"order_id": order_id,
+		"zgloszenie": platnosc.zgloszenie,
+	})

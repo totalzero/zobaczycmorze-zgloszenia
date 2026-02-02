@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .views_payu import zaplac, payu_webhook
+from .views_payu import zaplac, payu_webhook, payu_continue
 
 urlpatterns = [
 	path("", views.index, name="index"),
@@ -24,4 +24,5 @@ urlpatterns = [
 urlpatterns += [
 	path("payu/zaplac/<uuid:token>/<str:typ>/", zaplac, name="zaplac"),
 	path("payu/webhook/", payu_webhook, name="payu_webhook"),
+	path("payu/continue/", payu_continue, name="payu_continue"),
 ]
