@@ -89,7 +89,7 @@ def wplata_post_save(sender, instance, created, **kwargs):
 		"wplata": instance,
 		"link": link,
 	}
-	if instance.rodzaj == "wplata":
+	if instance.rodzaj in ["wplata", "payu"]:
 		subject = f"Zarejestrowaliśmy nową wpłatę {zgl.imie} {zgl.nazwisko}"
 		send_simple_mail(subject, zgl.email, "emails/wplata", context)
 	elif instance.rodzaj == "zwrot":
