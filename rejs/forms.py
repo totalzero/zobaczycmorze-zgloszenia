@@ -208,9 +208,9 @@ class Dane_DodatkoweForm(forms.ModelForm):
 			"poz1",
 			"poz2",
 			"poz3",
+			"pos6",
 			"pos4",
 			"pos5",
-			"pos6",
 		]
 		labels = {
 			"poz1": "pesel",
@@ -244,6 +244,13 @@ class Dane_DodatkoweForm(forms.ModelForm):
 					"aria-required": "true",
 				}
 			),
+			"pos6": forms.DateInput(
+				format="%d.%m.%Y",
+				attrs={
+					"type": "date",
+					"aria-required": "true",
+				}
+			),
 			"pos4": forms.TextInput(
 				attrs={
 					"aria-required": "true",
@@ -251,12 +258,6 @@ class Dane_DodatkoweForm(forms.ModelForm):
 			),
 			"pos5": forms.TextInput(
 				attrs={
-					"aria-required": "true",
-				}
-			),
-			"pos6": forms.DateInput(
-				attrs={
-					"type": "date",
 					"aria-required": "true",
 				}
 			),
