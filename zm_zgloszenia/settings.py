@@ -196,3 +196,7 @@ PAYU = {
 	"WEBHOOK_SECRET": os.getenv("WEBHOOK_SECRET"),
 	"PAYU_API_URL": os.getenv("PAYU_API_URL"),
 }
+
+#FORCE_SCRIPT_NAME = '/zgloszenia'
+#STATIC_URL = '/zgloszenia/static/'
+#STATIC_ROOT = '/home/riqskkdgbd/domains/zobaczycmorze.pl/public_html/zgloszenia/static'
